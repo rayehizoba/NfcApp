@@ -91,7 +91,9 @@ const Item = ({title}) => {
 
 const ListHeaderComponent = props => (
   <View style={tw`p-5`}>
-    <Text style={tw`text-2xl text-darker dark:text-lighter font-semibold`}>Add a record</Text>
+    <Text style={tw`text-2xl text-darker dark:text-lighter font-semibold`}>
+      Add a record
+    </Text>
     <Text style={tw`text-darker dark:text-lighter opacity-50`}>
       Add links to your personal profile
     </Text>
@@ -112,7 +114,6 @@ const ListHeaderComponent = props => (
 
 function AddRecordPage(props) {
   const renderItem = ({item}) => <Item title={item.title} />;
-
   return (
     <FlatList
       ListHeaderComponent={ListHeaderComponent}

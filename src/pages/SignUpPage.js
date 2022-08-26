@@ -14,15 +14,15 @@ import {Label} from '../components/Label';
 function SignUpPage(props) {
   return (
     <ScrollView contentContainerStyle={tw`p-8`}>
-      <View style={tw`h-48`}>
+      <View style={tw`h-48 flex items-center justify-center`}>
         <Image
-          style={tw`w-full h-full`}
+          style={tw`h-14`}
           source={require('../assets/img/brand-logo.png')}
           resizeMode="contain"
         />
       </View>
 
-      <View style={tw`flex-1 flex-col justify-center max-w-sm w-full mx-auto`}>
+      <View style={tw`flex-col justify-center max-w-sm w-full mx-auto`}>
         <Label title="Name">
           <TextInput
             style={tw`input`}
@@ -62,8 +62,7 @@ function SignUpPage(props) {
         <Pressable
           onPress={() => props.navigation.navigate('FooPage')}
           style={tw`btn mt-8`}
-          android_ripple={{borderless: false}}
-        >
+          android_ripple={{borderless: false}}>
           <Text style={tw`text-white uppercase font-semibold`}>Sign-Up</Text>
         </Pressable>
 

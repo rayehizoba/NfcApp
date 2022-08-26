@@ -11,6 +11,7 @@ import MessageQuestion from '../assets/img/message-question.svg';
 import ReadPage from '../pages/ReadPage';
 import WritePage from '../pages/WritePage';
 import OtherPage from '../pages/OtherPage';
+import LogoTitle from '../components/LogoTitle';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,9 +43,9 @@ function MainNavigator(props) {
         tabBarActiveTintColor: tw.color(isDarkMode ? 'primary' : 'accent'),
         tabBarInactiveTintColor: tw.color(isDarkMode ? 'lighter' : 'dark'),
         tabBarStyle: tw`bg-lighter dark:bg-darker border-t-0`,
-        tabBarItemStyle: tw`bg-neutral/50 dark:bg-secondary/50`,
-        headerStyle: tw`bg-primary/100 dark:bg-secondary/50`,
-        headerTintColor: tw.color('lighter'),
+        tabBarItemStyle: tw`dark:bg-secondary/50`,
+        headerStyle: tw`bg-lighter dark:bg-secondary/50 shadow-md`,
+        headerTintColor: tw.color('primary'),
         headerRight: ({tintColor}) => {
           return (
             <Pressable style={tw`p-5`} android_ripple={{borderless: true}}>
@@ -52,10 +53,13 @@ function MainNavigator(props) {
             </Pressable>
           );
         },
-        headerShadowVisible: false,
       })}
       sceneContainerStyle={tw`bg-lighter dark:bg-darker`}>
-      <Tab.Screen name="Read" component={ReadPage} options={{}} />
+      <Tab.Screen
+        name="Read"
+        component={ReadPage}
+        options={{headerTitle: props => <LogoTitle {...props} />}}
+      />
       <Tab.Screen name="Write" component={WritePage} />
       <Tab.Screen name="Other" component={OtherPage} />
       <Tab.Screen name="Settings" component={OtherPage} />

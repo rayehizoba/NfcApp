@@ -5,7 +5,7 @@
  * @format
  * @flow strict-local
  */
-
+import 'react-native-gesture-handler';
 import React from 'react';
 import type {Node} from 'react';
 import {SafeAreaView, StatusBar} from 'react-native';
@@ -21,10 +21,10 @@ const App: () => Node = () => {
   const isDarkMode = colorScheme === 'dark';
   return (
     <NavigationContainer>
-      <SafeAreaView style={tw`bg-transparent dark:bg-darker flex-1`}>
+      <SafeAreaView style={tw`bg-lighter dark:bg-darker flex-1`}>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        {/*<AuthNavigator />*/}
-        <GuestNavigator />
+        <AuthNavigator />
+        {/*<GuestNavigator />*/}
       </SafeAreaView>
     </NavigationContainer>
   );

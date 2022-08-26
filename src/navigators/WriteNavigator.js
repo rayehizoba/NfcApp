@@ -1,9 +1,9 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import tw from '../lib/tailwind';
 import WritePage from '../pages/WritePage';
+import {createStackNavigator} from '@react-navigation/stack';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 function WriteNavigator() {
   return (

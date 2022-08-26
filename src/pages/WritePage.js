@@ -1,12 +1,11 @@
 import React from 'react';
 import {Pressable, Text, View} from 'react-native';
-import tw from '../lib/tailwind';
 import AddCircle from '../assets/img/add-circle.svg';
 import MoreCircle from '../assets/img/more-circle.svg';
+import tw from '../lib/tailwind';
 
 function WritePage(props) {
   const iconSize = 20;
-
   return (
     <View style={tw`p-5`}>
       <Pressable
