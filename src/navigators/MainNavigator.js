@@ -18,7 +18,6 @@ const Tab = createBottomTabNavigator();
 function MainNavigator(props) {
   const [colorScheme] = useAppColorScheme(tw);
   const isDarkMode = colorScheme === 'dark';
-
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -41,11 +40,11 @@ function MainNavigator(props) {
           }
         },
         tabBarActiveTintColor: tw.color(isDarkMode ? 'primary' : 'accent'),
-        tabBarInactiveTintColor: tw.color(isDarkMode ? 'lighter' : 'dark'),
+        tabBarInactiveTintColor: tw.color(isDarkMode ? 'lighter' : 'lighter'),
         tabBarStyle: tw`bg-lighter dark:bg-darker border-t-0`,
         tabBarItemStyle: tw`dark:bg-secondary/50`,
-        headerStyle: tw`bg-lighter dark:bg-secondary/50 shadow-md`,
-        headerTintColor: tw.color('primary'),
+        headerStyle: tw`bg-lighter dark:bg-secondary shadow-md`,
+        headerTintColor: tw.color(isDarkMode ? 'lighter' : 'primary'),
         headerRight: ({tintColor}) => {
           return (
             <Pressable style={tw`p-5`} android_ripple={{borderless: true}}>

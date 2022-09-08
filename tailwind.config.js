@@ -25,7 +25,7 @@ module.exports = {
         // 😎 similar to `@apply`
         btn: 'px-4 py-3 rounded-md bg-primary text-white flex-row items-center justify-center',
         'btn-outline':
-          'px-4 py-3 rounded-md border border-primary text-white flex-row items-center justify-center dark:bg-dark',
+          'px-4 py-3 rounded-md border border-primary text-white flex-row items-center justify-center',
         'text-2xs': 'text-[10px]',
         input:
           'border border-neutral/80 dark:border-lighter/40 bg-neutral/50 dark:bg-lighter/10 rounded-md py-2 px-3 text-darker dark:text-lighter',
