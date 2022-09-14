@@ -8,6 +8,12 @@ import forPopUpModal from '../lib/forPopUpModal';
 import CopyTagModal from '../modals/CopyTagModal';
 import EraseTagModal from '../modals/EraseTagModal';
 import LockTagModal from '../modals/LockTagModal';
+import ReadMemoryModal from '../modals/ReadMemoryModal';
+import FormatMemoryModal from '../modals/FormatMemoryModal';
+import SetPasswordModal from '../modals/SetPasswordModal';
+import RemovePasswordModal from '../modals/RemovePasswordModal';
+import SuccessAlertModal from '../modals/SuccessAlertModal';
+import AdvancedCommandsModal from '../modals/AdvancedCommandsModal';
 
 const Stack = createStackNavigator();
 
@@ -49,6 +55,36 @@ function AuthNavigator() {
       <Stack.Screen
         name="LockTagModal"
         component={LockTagModal}
+        options={popUpModalScreenOptions}
+      />
+      <Stack.Screen
+        name="ReadMemoryModal"
+        component={ReadMemoryModal}
+        options={popUpModalScreenOptions}
+      />
+      <Stack.Screen
+        name="FormatMemoryModal"
+        component={FormatMemoryModal}
+        options={popUpModalScreenOptions}
+      />
+      <Stack.Screen
+        name="SetPasswordModal"
+        component={SetPasswordModal}
+        options={popUpModalScreenOptions}
+      />
+      <Stack.Screen
+        name="RemovePasswordModal"
+        component={RemovePasswordModal}
+        options={popUpModalScreenOptions}
+      />
+      <Stack.Screen
+        name="SuccessAlertModal"
+        component={SuccessAlertModal}
+        options={popUpModalScreenOptions}
+      />
+      <Stack.Screen
+        name="AdvancedCommandsModal"
+        component={AdvancedCommandsModal}
         options={popUpModalScreenOptions}
       />
     </Stack.Navigator>

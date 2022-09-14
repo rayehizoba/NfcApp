@@ -7,7 +7,7 @@ function ModalTemplate({children, title, containerStyle}) {
     <View style={tw`flex flex-1 items-center justify-center p-6`}>
       <View
         style={[
-          tw`flex-col w-2/3 bg-white dark:bg-secondary rounded p-2`,
+          tw`flex-col w-64 bg-white dark:bg-secondary rounded p-2`,
           containerStyle,
         ]}>
         {Boolean(title) && (

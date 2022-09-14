@@ -40,7 +40,7 @@ function MainNavigator(props) {
           }
         },
         tabBarActiveTintColor: tw.color(isDarkMode ? 'primary' : 'accent'),
-        tabBarInactiveTintColor: tw.color(isDarkMode ? 'lighter' : 'lighter'),
+        tabBarInactiveTintColor: tw.color(isDarkMode ? 'lighter' : 'darker'),
         tabBarStyle: tw`bg-lighter dark:bg-darker border-t-0`,
         tabBarItemStyle: tw`dark:bg-secondary/50`,
         headerStyle: tw`bg-lighter dark:bg-secondary shadow-md`,
