@@ -22,7 +22,8 @@ function SuccessAlertModal({route, navigation}) {
           source={require('../assets/img/Ok.png')}
           resizeMode="contain"
         />
-        <Text style={tw`text-lg font-semibold text-dark dark:text-lighter leading-tight text-center`}>
+        <Text
+          style={tw`text-lg font-semibold text-dark dark:text-lighter leading-tight text-center`}>
           {message}
         </Text>
       </View>

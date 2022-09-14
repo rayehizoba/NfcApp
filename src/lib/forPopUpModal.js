@@ -21,7 +21,7 @@ const forPopUpModal = ({current: {progress}}) => ({
       outputRange: [0, 0.75],
       extrapolate: 'clamp',
     }),
-    backgroundColor: tw.color('black/70'),
+    backgroundColor: tw.color('light/50'),
   },
 });
 

@@ -40,7 +40,17 @@ function AuthNavigator() {
         component={MainNavigator}
         options={{headerShown: false}}
       />
-      <Stack.Screen name="AddRecordPage" component={AddRecordPage} />
+      <Stack.Screen
+        name="AddRecordPage"
+        component={AddRecordPage}
+        options={{
+          cardStyle: tw`bg-white`,
+          headerShown: true,
+          headerTitle: 'Write',
+          headerStyle: tw`bg-lighter dark:bg-secondary shadow-md`,
+          headerTintColor: tw.color('primary'),
+        }}
+      />
       <Stack.Screen name="EditRecordPage" component={EditRecordPage} />
       <Stack.Screen
         name="CopyTagModal"

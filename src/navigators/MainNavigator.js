@@ -45,20 +45,15 @@ function MainNavigator(props) {
         tabBarItemStyle: tw`dark:bg-secondary/50`,
         headerStyle: tw`bg-lighter dark:bg-secondary shadow-md`,
         headerTintColor: tw.color(isDarkMode ? 'lighter' : 'primary'),
-        headerRight: ({tintColor}) => {
-          return (
-            <Pressable style={tw`p-5`} android_ripple={{borderless: true}}>
-              <MessageQuestion stroke={tintColor} width={24} height={24} />
-            </Pressable>
-          );
-        },
+        headerRight: ({tintColor}) => (
+          <Pressable style={tw`p-5`} android_ripple={{borderless: true}}>
+            <MessageQuestion stroke={tintColor} width={24} height={24} />
+          </Pressable>
+        ),
+        headerTitle: props => <LogoTitle {...props} />,
       })}
       sceneContainerStyle={tw`bg-lighter dark:bg-darker`}>
-      <Tab.Screen
-        name="Read"
-        component={ReadPage}
-        options={{headerTitle: props => <LogoTitle {...props} />}}
-      />
+      <Tab.Screen name="Read" component={ReadPage} />
       <Tab.Screen name="Write" component={WritePage} />
       <Tab.Screen name="Other" component={OtherPage} />
       <Tab.Screen name="Settings" component={OtherPage} />
