@@ -63,7 +63,7 @@ function MainNavigator(props) {
       <Tab.Screen name="Write" component={WritePage} />
       <Tab.Screen name="Other" component={OtherPage} />
       <Tab.Screen name="Settings" component={OtherPage} />
-      <Tab.Screen name="MoreOptions" component={MoreOptions} />
+      <Tab.Screen name="More Options" component={MoreOptions} />
     </Tab.Navigator>
   );
 }
