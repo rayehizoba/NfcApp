@@ -20,6 +20,7 @@ function MoreOptions(props) {
         <Text style={tw`ml-3 text-lighter`}>Clear current records</Text>
       </Pressable>
 
+    {/* Import From NFC Tag */}
       <Pressable
        onPress={() => props.navigation.navigate('ImportFromNFCTagModal')}
         style={tw`my-1.5 rounded overflow-hidden flex-row items-center p-3 border border-primary dark:border-green bg-green/100 dark:bg-green/50`}
@@ -28,6 +29,7 @@ function MoreOptions(props) {
         <Text style={tw`ml-3 text-lighter`}>Import from NFC tag</Text>
       </Pressable>
 
+    {/* Import From QR Code */}
       <Pressable
        onPress={() => props.navigation.navigate('ImportFromQRCodeModal')}
         style={tw`my-1.5 rounded overflow-hidden flex-row items-center p-3 border border-primary dark:border-green bg-green/100 dark:bg-green/50`}
@@ -36,6 +38,7 @@ function MoreOptions(props) {
         <Text style={tw`ml-3 text-lighter`}>Import from QR code</Text>
       </Pressable>
 
+    {/* Scan Tag */}
       <Pressable
        onPress={() => props.navigation.navigate('ScanTagModal')}
         style={tw`my-1.5 rounded overflow-hidden flex-row items-center p-3 border border-primary dark:border-green bg-green/100 dark:bg-green/50`}
