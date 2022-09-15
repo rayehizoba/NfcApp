@@ -8,6 +8,10 @@ import forPopUpModal from '../lib/forPopUpModal';
 import CopyTagModal from '../modals/CopyTagModal';
 import EraseTagModal from '../modals/EraseTagModal';
 import LockTagModal from '../modals/LockTagModal';
+import ClearCurrentRecordsModal from '../modals/ClearCurrentRecordsModal';
+import ImportFromNFCTagModal from '../modals/ImportFromNFCTagModal';
+import ImportFromQRCodeModal from '../modals/ImportFromQRCodeModal';
+import ScanTagModal from '../modals/ScanTagModal';
 
 const Stack = createStackNavigator();
 
@@ -49,6 +53,26 @@ function AuthNavigator() {
       <Stack.Screen
         name="LockTagModal"
         component={LockTagModal}
+        options={popUpModalScreenOptions}
+      />
+      <Stack.Screen
+        name="ClearCurrentRecordsModal"
+        component={ClearCurrentRecordsModal}
+        options={popUpModalScreenOptions}
+      />
+      <Stack.Screen
+        name="ImportFromNFCTagModal"
+        component={ImportFromNFCTagModal}
+        options={popUpModalScreenOptions}
+      />
+      <Stack.Screen
+        name="ImportFromQRCodeModal"
+        component={ImportFromQRCodeModal}
+        options={popUpModalScreenOptions}
+      />
+      <Stack.Screen
+        name="ScanTagModal"
+        component={ScanTagModal}
         options={popUpModalScreenOptions}
       />
     </Stack.Navigator>

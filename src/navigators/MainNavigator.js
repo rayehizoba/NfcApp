@@ -11,6 +11,7 @@ import MessageQuestion from '../assets/img/message-question.svg';
 import ReadPage from '../pages/ReadPage';
 import WritePage from '../pages/WritePage';
 import OtherPage from '../pages/OtherPage';
+import MoreOptions from '../pages/MoreOptions';
 import LogoTitle from '../components/LogoTitle';
 
 const Tab = createBottomTabNavigator();
@@ -62,6 +63,7 @@ function MainNavigator(props) {
       <Tab.Screen name="Write" component={WritePage} />
       <Tab.Screen name="Other" component={OtherPage} />
       <Tab.Screen name="Settings" component={OtherPage} />
+      <Tab.Screen name="MoreOptions" component={MoreOptions} />
     </Tab.Navigator>
   );
 }
