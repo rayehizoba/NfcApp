@@ -14,6 +14,9 @@ import SetPasswordModal from '../modals/SetPasswordModal';
 import RemovePasswordModal from '../modals/RemovePasswordModal';
 import SuccessAlertModal from '../modals/SuccessAlertModal';
 import AdvancedCommandsModal from '../modals/AdvancedCommandsModal';
+import ProEditionPage from '../pages/ProEditionPage';
+import AppInfoPage from '../pages/AppInfoPage';
+import {useAppColorScheme} from 'twrnc';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +26,8 @@ const popUpModalScreenOptions = {
 };
 
 function AuthNavigator() {
+  const [colorScheme] = useAppColorScheme(tw);
+  const isDarkMode = colorScheme === 'dark';
   return (
     <Stack.Navigator
       screenOptions={{
@@ -44,14 +49,18 @@ function AuthNavigator() {
         name="AddRecordPage"
         component={AddRecordPage}
         options={{
-          cardStyle: tw`bg-white`,
+          cardStyle: isDarkMode ? tw`bg-darker` : tw`bg-white`,
           headerShown: true,
           headerTitle: 'Write',
           headerStyle: tw`bg-lighter dark:bg-secondary shadow-md`,
-          headerTintColor: tw.color('primary'),
+          headerTintColor: tw.color(isDarkMode ? 'lighter' : 'primary'),
         }}
       />
       <Stack.Screen name="EditRecordPage" component={EditRecordPage} />
+      <Stack.Screen name="ProEditionPage" component={ProEditionPage} />
+      <Stack.Screen name="AppInfoPage" component={AppInfoPage} />
+
+      {/* Modals */}
       <Stack.Screen
         name="CopyTagModal"
         component={CopyTagModal}

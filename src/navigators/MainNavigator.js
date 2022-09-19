@@ -12,6 +12,7 @@ import ReadPage from '../pages/ReadPage';
 import WritePage from '../pages/WritePage';
 import OtherPage from '../pages/OtherPage';
 import LogoTitle from '../components/LogoTitle';
+import SettingsPage from '../pages/SettingsPage';
 
 const Tab = createBottomTabNavigator();
 
@@ -50,13 +51,17 @@ function MainNavigator(props) {
             <MessageQuestion stroke={tintColor} width={24} height={24} />
           </Pressable>
         ),
-        headerTitle: props => <LogoTitle {...props} />,
+        headerTitleStyle: tw`font-normal`,
       })}
       sceneContainerStyle={tw`bg-lighter dark:bg-darker`}>
-      <Tab.Screen name="Read" component={ReadPage} />
+      <Tab.Screen
+        name="Read"
+        component={ReadPage}
+        options={{headerTitle: props => <LogoTitle {...props} />}}
+      />
       <Tab.Screen name="Write" component={WritePage} />
       <Tab.Screen name="Other" component={OtherPage} />
-      <Tab.Screen name="Settings" component={OtherPage} />
+      <Tab.Screen name="Settings" component={SettingsPage} />
     </Tab.Navigator>
   );
 }

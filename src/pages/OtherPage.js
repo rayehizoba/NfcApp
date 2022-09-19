@@ -16,7 +16,7 @@ const iconSize = 20;
 function OtherPage(props) {
   const itemStyle = tw`my-1.5 rounded overflow-hidden flex-row items-center p-3 border border-primary dark:border-green bg-green/100 dark:bg-green/50`;
   return (
-    <View style={tw`p-5`}>
+    <View style={tw`p-4`}>
       {/* Copy tag */}
       <Pressable
         onPress={() => props.navigation.navigate('CopyTagModal')}
