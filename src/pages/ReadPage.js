@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 import NfcTools from '../assets/img/nfctools.svg';
 import tw from '../lib/tailwind';
 import NfcManager, {
@@ -11,6 +11,7 @@ import NfcManager, {
 
 function ReadPage(props) {
   const [hasNfc, setHasNfc] = React.useState(false);
+  const [tag, setTag] = React.useState();
 
   React.useEffect(() => {
     async function checkNfc() {
@@ -27,6 +28,7 @@ function ReadPage(props) {
   React.useEffect(() => {
     async function scanTag() {
       NfcManager.setEventListener(NfcEvents.DiscoverTag, tag => {
+        setTag(tag);
         console.warn('tag found', tag);
       });
       await NfcManager.registerTagEvent();
@@ -38,6 +40,14 @@ function ReadPage(props) {
 
     scanTag();
   }, []);
+
+  if (tag) {
+    return (
+      <ScrollView contentContainerStyle={tw`p-5`}>
+        <Text>{JSON.stringify(tag, null, 2)}</Text>
+      </ScrollView>
+    );
+  }
 
   return (
     <View style={tw`p-10 flex-col items-center`}>

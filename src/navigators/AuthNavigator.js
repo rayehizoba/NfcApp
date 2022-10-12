@@ -51,7 +51,7 @@ function AuthNavigator() {
         options={{
           cardStyle: isDarkMode ? tw`bg-darker` : tw`bg-white`,
           headerShown: true,
-          headerTitle: 'Write',
+          headerTitle: 'Add a record',
           headerStyle: tw`bg-lighter dark:bg-secondary shadow-md`,
           headerTintColor: tw.color(isDarkMode ? 'lighter' : 'primary'),
         }}
