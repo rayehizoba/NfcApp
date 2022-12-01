@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {Pressable, ScrollView, Text, View} from 'react-native';
 import NfcTools from '../assets/img/nfctools.svg';
 import tw from '../lib/tailwind';
 import NfcManager, {
@@ -8,6 +8,7 @@ import NfcManager, {
   NfcEvents,
   NfcError,
 } from 'react-native-nfc-manager';
+import {Icon} from 'react-native-vector-icons/MaterialCommunityIcons';
 
 function ReadPage(props) {
   const [hasNfc, setHasNfc] = React.useState(false);
@@ -42,9 +43,46 @@ function ReadPage(props) {
   }, []);
 
   if (tag) {
+    const list = [
+      {
+        h1: 'Technologies available',
+        h2: tag.techTypes.map(techType => techType.split('.').pop()).join(', '),
+      },
+      {
+        h1: 'Data format',
+        h2: tag.type,
+      },
+      {
+        h1: 'Size',
+        h2: '- / ' + tag.maxSize + ' Bytes',
+      },
+      {
+        h1: 'Writable',
+        h2: tag.isWritable ? 'Yes' : 'No',
+      },
+      {
+        h1: 'Can be made read-only',
+        h2: tag.canMakeReadOnly ? 'Yes' : 'No',
+      },
+    ];
     return (
       <ScrollView contentContainerStyle={tw`p-5`}>
-        <Text>{JSON.stringify(tag, null, 2)}</Text>
+        {/*replace with a flatlist*/}
+        {list.map(({h1, h2}) => (
+          <View style={tw`flex-row py-2 border-b`}>
+            <View style={tw`bg-black rounded-full w-10 h-10`} />
+            <View style={tw`px-2`}>
+              <Text style={tw`text-black font-semibold`}>{h1}</Text>
+              <Text style={tw`text-xs`}>{h2}</Text>
+            </View>
+            <View>
+              <Pressable onPress={() => {}}>
+                {/*<Icon style={tw``} name="dots" />*/}
+              </Pressable>
+            </View>
+          </View>
+        ))}
+        {/*<Text>{JSON.stringify(tag, null, 2)}</Text>*/}
       </ScrollView>
     );
   }
