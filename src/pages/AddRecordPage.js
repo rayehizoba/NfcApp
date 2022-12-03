@@ -16,10 +16,10 @@ const Item = ({title, types}) => {
   return (
     <View style={tw`px-5 pb-5`}>
       <Text style={tw`text-2xl text-darker dark:text-lighter`}>{title}</Text>
-      {types.map(({icon, name}) => (
+      {types.map(({icon, name, page = 'EditRecordPage'}) => (
         <View style={tw`my-2 rounded border border-green`}>
           <Pressable
-            onPress={() => navigation.navigate('EditRecordPage')}
+            onPress={() => navigation.navigate(page)}
             style={tw`p-2 px-3`}
             android_ripple={{borderless: false}}>
             <View style={tw`flex-row items-center`}>

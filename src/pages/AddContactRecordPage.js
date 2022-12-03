@@ -3,12 +3,22 @@ import {Pressable, Text, TextInput, View, ScrollView} from 'react-native';
 import tw from '../lib/tailwind';
 import {Label} from '../components/Label';
 import useKeyboardVisible from '../lib/useKeyboardVisible';
+import {CONTACT_NUMBER_RECORD} from '../lib/consts';
 
-function AddContactRecordPage(props) {
+function AddContactRecordPage({navigation}) {
   const keyboardVisible = useKeyboardVisible();
+  const onPressCancel = () => navigation.goBack();
   return (
-    <ScrollView contentContainerStyle={tw`p-5 flex-col flex-1`}>
-      <View style={tw`flex-1`}>
+    <ScrollView contentContainerStyle={tw`flex-col flex-1`}>
+      <View style={tw`bg-white shadow-md p-4 pt-2 flex-row items-center`}>
+        {React.createElement(CONTACT_NUMBER_RECORD.icon, {
+          width: 20,
+          height: 20,
+        })}
+        <Text style={tw`ml-8 text-dark`}>Enter your contact</Text>
+      </View>
+
+      <View style={tw`flex-1 p-4`}>
         <Label title="Contact Name" style={tw`mb-5`}>
           <TextInput
             style={tw`input`}
@@ -54,8 +64,9 @@ function AddContactRecordPage(props) {
       </View>
 
       {keyboardVisible || (
-        <View style={tw`flex-row`}>
+        <View style={tw`flex-row p-4`}>
           <Pressable
+            onPress={onPressCancel}
             style={tw`btn mr-5 flex-1`}
             android_ripple={{borderless: false}}>
             <Text style={tw`text-lighter uppercase font-semibold`}>Cancel</Text>

@@ -17,6 +17,7 @@ import AdvancedCommandsModal from '../modals/AdvancedCommandsModal';
 import ProEditionPage from '../pages/ProEditionPage';
 import AppInfoPage from '../pages/AppInfoPage';
 import {useAppColorScheme} from 'twrnc';
+import AddRecordNavigator from './AddRecordNavigator';
 
 const Stack = createStackNavigator();
 
@@ -46,17 +47,22 @@ function AuthNavigator() {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="AddRecordPage"
-        component={AddRecordPage}
-        options={{
-          cardStyle: isDarkMode ? tw`bg-darker` : tw`bg-white`,
-          headerShown: true,
-          headerTitle: 'Add a record',
-          headerStyle: tw`bg-lighter dark:bg-secondary shadow-md`,
-          headerTintColor: tw.color(isDarkMode ? 'lighter' : 'primary'),
-        }}
+        name="AddRecordNavigator"
+        component={AddRecordNavigator}
+        options={{headerShown: false}}
       />
-      <Stack.Screen name="EditRecordPage" component={EditRecordPage} />
+      {/*<Stack.Screen*/}
+      {/*  name="AddRecordPage"*/}
+      {/*  component={AddRecordPage}*/}
+      {/*  options={{*/}
+      {/*    cardStyle: isDarkMode ? tw`bg-darker` : tw`bg-white`,*/}
+      {/*    headerShown: true,*/}
+      {/*    headerTitle: 'Add a record',*/}
+      {/*    headerStyle: tw`bg-lighter dark:bg-secondary shadow-md`,*/}
+      {/*    headerTintColor: tw.color(isDarkMode ? 'lighter' : 'primary'),*/}
+      {/*  }}*/}
+      {/*/>*/}
+      {/*<Stack.Screen name="EditRecordPage" component={EditRecordPage} />*/}
       <Stack.Screen name="ProEditionPage" component={ProEditionPage} />
       <Stack.Screen name="AppInfoPage" component={AppInfoPage} />
 
