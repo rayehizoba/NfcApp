@@ -11,7 +11,7 @@ function Item({icon = 'information-variant', h1, h2}) {
   return (
     <View style={tw`flex-row items-center px-4 py-3`}>
       <View
-        style={tw`bg-dark dark:bg-secondary rounded-full w-11 h-11 flex-row items-center justify-center`}>
+        style={tw`bg-dark dark:bg-neutral rounded-full w-11 h-11 flex-row items-center justify-center`}>
         <Icon name={icon} style={tw`text-lighter dark:text-dark text-3xl`} />
       </View>
       <View style={tw`px-2`}>
@@ -60,6 +60,7 @@ function ReadPage(props) {
   }, []);
 
   if (tag) {
+    console.warn(tag);
     const data = [
       {
         id: uuid.v4(),
@@ -91,7 +92,7 @@ function ReadPage(props) {
         h1: 'Can be made read-only',
         h2: tag.canMakeReadOnly ? 'Yes' : 'No',
       },
-      ...tag.ndefMessage.map((ndefRecord, index) => {
+      ...(tag.ndefMessage || []).map((ndefRecord, index) => {
         let icon = null;
         let h1 = `Record ${index + 1}`;
         let h2 = '';
@@ -138,9 +139,9 @@ function ReadPage(props) {
       <Text style={tw`text-lg mt-3 text-dark dark:text-lighter`}>
         Approach an NFC Tag
       </Text>
-      <Text style={tw`text-lg mt-3 text-dark dark:text-lighter`}>
-        Has Nfc ? ({hasNfc.toString()})
-      </Text>
+      {/*<Text style={tw`text-lg mt-3 text-dark dark:text-lighter`}>*/}
+      {/*  Has Nfc ? ({hasNfc.toString()})*/}
+      {/*</Text>*/}
     </View>
   );
 }

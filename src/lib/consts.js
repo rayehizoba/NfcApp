@@ -1,39 +1,45 @@
-import Contacts from '../assets/img/contacts.svg';
 import Mail from '../assets/img/mail.svg';
 import Website from '../assets/img/website.svg';
-import Text from '../assets/img/document-text.svg';
 
-export const CONTACT_NUMBER_RECORD = {
-  icon: Contacts,
+export const CONTACT_RECORD = {
   name: 'Contact Number',
   page: 'AddContactRecordPage',
+  title: 'Enter your contact',
 };
 
 export const TEXT_RECORD = {
-  icon: Text,
   name: 'Text',
   page: 'AddTextRecordPage',
+  title: 'Enter your text',
+};
+
+export const URI_RECORD = {
+  name: 'URL / URI',
+  page: 'AddUrlRecordPage',
+  title: 'Enter your URL',
 };
 
 export const RECORD_TYPES = [
   {
     title: 'Recommended',
     types: [
-      CONTACT_NUMBER_RECORD,
-      {
-        icon: Mail,
-        name: 'Email',
-      },
-      {
-        icon: Website,
-        name: 'Website',
-      },
+      TEXT_RECORD,
+      CONTACT_RECORD,
+      URI_RECORD,
+      // {
+      //   icon: Mail,
+      //   name: 'Email',
+      // },
+      // {
+      //   icon: Website,
+      //   name: 'Website',
+      // },
     ],
   },
   // {
   //   title: 'Contact Info',
   //   types: [
-  //     CONTACT_NUMBER_RECORD,
+  //     CONTACT_RECORD,
   //     {
   //       icon: Mail,
   //       name: 'Email',
@@ -148,10 +154,7 @@ export const RECORD_TYPES = [
         icon: Mail,
         name: 'File',
       },
-      {
-        icon: Website,
-        name: 'URL/URI',
-      },
+      URI_RECORD,
       {
         icon: Website,
         name: 'Application',

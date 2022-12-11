@@ -24,16 +24,16 @@ function MainNavigator(props) {
       screenOptions={({route}) => ({
         tabBarIcon: ({color, size}) => {
           switch (route.name) {
-            case 'Read':
+            case 'ReadPage':
               return <Read stroke={color} width={size} height={size} />;
 
-            case 'Write':
+            case 'WritePage':
               return <Write stroke={color} width={size} height={size} />;
 
-            case 'Other':
+            case 'OtherPage':
               return <Other stroke={color} width={size} height={size} />;
 
-            case 'Settings':
+            case 'SettingsPage':
               return <Setting stroke={color} width={size} height={size} />;
 
             default:
@@ -55,13 +55,28 @@ function MainNavigator(props) {
       })}
       sceneContainerStyle={tw`bg-lighter dark:bg-darker`}>
       <Tab.Screen
-        name="Read"
+        name="ReadPage"
         component={ReadPage}
-        options={{headerTitle: props => <LogoTitle {...props} />}}
+        options={{
+          headerTitle: props => <LogoTitle {...props} />,
+          tabBarLabel: 'Read',
+        }}
       />
-      <Tab.Screen name="Write" component={WritePage} />
-      <Tab.Screen name="Other" component={OtherPage} />
-      <Tab.Screen name="Settings" component={SettingsPage} />
+      <Tab.Screen
+        name="WritePage"
+        component={WritePage}
+        options={{tabBarLabel: 'Write', headerTitle: 'Write'}}
+      />
+      <Tab.Screen
+        name="OtherPage"
+        component={OtherPage}
+        options={{tabBarLabel: 'Other', headerTitle: 'Other'}}
+      />
+      <Tab.Screen
+        name="SettingsPage"
+        component={SettingsPage}
+        options={{tabBarLabel: 'Settings', headerTitle: 'Settings'}}
+      />
     </Tab.Navigator>
   );
 }

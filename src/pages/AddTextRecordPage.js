@@ -1,11 +1,15 @@
-import {Pressable, Text, TextInput, View, ScrollView} from 'react-native';
 import React from 'react';
-import tw from '../lib/tailwind';
-import Validator from '../lib/Validator';
-import {TEXT_RECORD} from '../lib/consts';
+import {TextInput} from 'react-native';
+import {useDispatch} from 'react-redux';
+import AddRecordForm from '../components/AddRecordForm';
 import ValidatedComponent from '../components/ValidatedComponent';
+import * as recordActions from '../store/record/record.actions';
+import {TEXT_RECORD} from '../lib/consts';
+import Validator from '../lib/Validator';
+import tw from '../lib/tailwind';
 
 function AddTextRecordPage({navigation}) {
+  const dispatch = useDispatch();
   const inputText = React.useRef(null);
   const formRules = {
     text: 'required',
@@ -19,58 +23,50 @@ function AddTextRecordPage({navigation}) {
     inputText.current && inputText.current.focus();
   }, []);
   const onPressCancel = () => navigation.goBack();
-  const onPressSave = () => {
+  const onPressSave = async () => {
     const validation = new Validator(formData, formRules);
     if (validation.passes()) {
       setFormErrors(null);
-
+      dispatch(recordActions.createRecord(TEXT_RECORD, formData));
+      navigation.navigate('WritePage');
     } else {
       setFormErrors(validation.errors.all());
     }
   };
+  // const writeNdef = async text => {
+  //   const textRecord = Ndef.textRecord(text);
+  //   const bytes = Ndef.encodeMessage([textRecord]);
+  //
+  //   try {
+  //     await NfcManager.requestTechnology(NfcTech.Ndef);
+  //     await NfcManager.ndefHandler.writeNdefMessage(bytes);
+  //   } catch (ex) {
+  //     // bypass
+  //   } finally {
+  //     await NfcManager.cancelTechnologyRequest();
+  //   }
+  // };
   return (
-    <ScrollView contentContainerStyle={tw`flex-col flex-1`}>
-      <View style={tw`bg-white shadow-md p-4 pt-2 flex-row items-center`}>
-        {React.createElement(TEXT_RECORD.icon, {
-          width: 21,
-          height: 21,
-        })}
-        <Text style={tw`ml-8 text-dark`}>Enter your text</Text>
-      </View>
-
-      <View style={tw`flex-1 p-4`}>
-        <ValidatedComponent
-          name="text"
-          errors={formErrors}
-          style={tw`input`}
-          renderComponent={style => (
-            <TextInput
-              ref={inputText}
-              value={text}
-              onChangeText={setText}
-              style={style}
-              placeholder="Hello !"
-              onSubmitEditing={onPressSave}
-            />
-          )}
-        />
-      </View>
-
-      <View style={tw`flex-row p-4`}>
-        <Pressable
-          onPress={onPressCancel}
-          style={tw`btn mr-5 flex-1`}
-          android_ripple={{borderless: false}}>
-          <Text style={tw`text-lighter uppercase font-semibold`}>Cancel</Text>
-        </Pressable>
-        <Pressable
-          onPress={onPressSave}
-          style={tw`btn flex-1`}
-          android_ripple={{borderless: false}}>
-          <Text style={tw`text-lighter uppercase font-semibold`}>Save</Text>
-        </Pressable>
-      </View>
-    </ScrollView>
+    <AddRecordForm
+      record={TEXT_RECORD}
+      onPressCancel={onPressCancel}
+      onPressSave={onPressSave}>
+      <ValidatedComponent
+        name="text"
+        errors={formErrors}
+        style={tw`input`}
+        renderComponent={style => (
+          <TextInput
+            ref={inputText}
+            value={text}
+            onChangeText={setText}
+            style={style}
+            placeholder=""
+            multiline
+          />
+        )}
+      />
+    </AddRecordForm>
   );
 }
 

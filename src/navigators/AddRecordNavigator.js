@@ -7,6 +7,7 @@ import EditRecordPage from '../pages/EditRecordPage';
 import forSlideScreen from '../lib/forSlideScreen';
 import AddContactRecordPage from '../pages/AddContactRecordPage';
 import AddTextRecordPage from '../pages/AddTextRecordPage';
+import AddUrlRecordPage from '../pages/AddUrlRecordPage';
 
 const Stack = createStackNavigator();
 
@@ -38,6 +39,7 @@ function AddRecordNavigator() {
         component={AddContactRecordPage}
       />
       <Stack.Screen name="AddTextRecordPage" component={AddTextRecordPage} />
+      <Stack.Screen name="AddUrlRecordPage" component={AddUrlRecordPage} />
 
       <Stack.Screen name="EditRecordPage" component={EditRecordPage} />
     </Stack.Navigator>

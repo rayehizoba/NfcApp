@@ -6,6 +6,7 @@ import Plus from '../assets/img/plus-icon.svg';
 import {useAppColorScheme} from 'twrnc';
 import {RECORD_TYPES} from '../lib/consts';
 import {useNavigation} from '@react-navigation/native';
+import {getRecordIcon} from '../lib/helpers';
 
 const iconSize = 24;
 
@@ -16,16 +17,19 @@ const Item = ({title, types}) => {
   return (
     <View style={tw`px-5 pb-5`}>
       <Text style={tw`text-2xl text-darker dark:text-lighter`}>{title}</Text>
-      {types.map(({icon, name, page = 'EditRecordPage'}) => (
+      {types.map(record => (
         <View style={tw`my-2 rounded border border-green`}>
           <Pressable
-            onPress={() => navigation.navigate(page)}
+            onPress={() => navigation.navigate(record.page || 'EditRecordPage')}
             style={tw`p-2 px-3`}
             android_ripple={{borderless: false}}>
             <View style={tw`flex-row items-center`}>
-              {React.createElement(icon, {width: iconSize, height: iconSize})}
+              {React.createElement(getRecordIcon(record), {
+                width: iconSize,
+                height: iconSize,
+              })}
               <Text style={tw`text-darker dark:text-lighter text-lg mx-3`}>
-                {name}
+                {record.name}
               </Text>
               <View style={tw`ml-auto mr-3`}>
                 <Plus

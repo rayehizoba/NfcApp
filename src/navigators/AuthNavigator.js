@@ -1,8 +1,6 @@
 import React from 'react';
 import MainNavigator from './MainNavigator';
 import tw from '../lib/tailwind';
-import AddRecordPage from '../pages/AddRecordPage';
-import EditRecordPage from '../pages/EditRecordPage';
 import {createStackNavigator} from '@react-navigation/stack';
 import forPopUpModal from '../lib/forPopUpModal';
 import CopyTagModal from '../modals/CopyTagModal';
@@ -18,6 +16,7 @@ import ProEditionPage from '../pages/ProEditionPage';
 import AppInfoPage from '../pages/AppInfoPage';
 import {useAppColorScheme} from 'twrnc';
 import AddRecordNavigator from './AddRecordNavigator';
+import WriteTagModal from '../modals/WriteTagModal';
 
 const Stack = createStackNavigator();
 
@@ -27,8 +26,6 @@ const popUpModalScreenOptions = {
 };
 
 function AuthNavigator() {
-  const [colorScheme] = useAppColorScheme(tw);
-  const isDarkMode = colorScheme === 'dark';
   return (
     <Stack.Navigator
       screenOptions={{
@@ -51,22 +48,15 @@ function AuthNavigator() {
         component={AddRecordNavigator}
         options={{headerShown: false}}
       />
-      {/*<Stack.Screen*/}
-      {/*  name="AddRecordPage"*/}
-      {/*  component={AddRecordPage}*/}
-      {/*  options={{*/}
-      {/*    cardStyle: isDarkMode ? tw`bg-darker` : tw`bg-white`,*/}
-      {/*    headerShown: true,*/}
-      {/*    headerTitle: 'Add a record',*/}
-      {/*    headerStyle: tw`bg-lighter dark:bg-secondary shadow-md`,*/}
-      {/*    headerTintColor: tw.color(isDarkMode ? 'lighter' : 'primary'),*/}
-      {/*  }}*/}
-      {/*/>*/}
-      {/*<Stack.Screen name="EditRecordPage" component={EditRecordPage} />*/}
       <Stack.Screen name="ProEditionPage" component={ProEditionPage} />
       <Stack.Screen name="AppInfoPage" component={AppInfoPage} />
 
       {/* Modals */}
+      <Stack.Screen
+        name="WriteTagModal"
+        component={WriteTagModal}
+        options={popUpModalScreenOptions}
+      />
       <Stack.Screen
         name="CopyTagModal"
         component={CopyTagModal}
