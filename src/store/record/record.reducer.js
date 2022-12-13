@@ -1,5 +1,6 @@
 export const types = {
   CREATE: 'RECORD/CREATE',
+  WRITE: 'RECORD/WRITE',
   SET: 'RECORD/SET',
 };
 

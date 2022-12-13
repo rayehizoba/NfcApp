@@ -17,6 +17,7 @@ const reducers = combineReducers({
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
+  // blacklist: ['record', 'records'],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
@@ -24,12 +25,14 @@ const persistedReducer = persistReducer(persistConfig, reducers);
 const middlewareComponents = [thunk];
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+  const createDebugger = require('redux-flipper').default;
+  middlewareComponents.push(createDebugger());
   middlewareComponents.push(logger);
 }
 
 const middleware = applyMiddleware(...middlewareComponents);
 
-const store = createStore(persistedReducer, applyMiddleware(logger));
+const store = createStore(persistedReducer, middleware);
 
 export const persistor = persistStore(store);
 

@@ -4,32 +4,74 @@ import Magnify from '../assets/img/magnify.svg';
 import tw from '../lib/tailwind';
 import Plus from '../assets/img/plus-icon.svg';
 import {useAppColorScheme} from 'twrnc';
-import {RECORD_TYPES} from '../lib/consts';
+import {
+  TEXT,
+  TYPE_ICON_MAP,
+  TYPE_NAME_MAP,
+  TYPE_PAGE_MAP,
+  VCARD,
+} from '../lib/consts';
 import {useNavigation} from '@react-navigation/native';
-import {getRecordIcon} from '../lib/helpers';
 
 const iconSize = 24;
 
+/**
+ *
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function AddRecordPage(props) {
+  const data = [
+    {
+      title: 'Recommended',
+      types: [TEXT, VCARD, URL],
+    },
+  ];
+  const renderItem = ({item}) => <Item title={item.title} types={item.types} />;
+  return (
+    <FlatList
+      data={data}
+      renderItem={renderItem}
+      keyExtractor={item => item.id}
+      ListHeaderComponent={ListHeaderComponent}
+    />
+  );
+}
+
+export default AddRecordPage;
+
+/**
+ *
+ * @param title
+ * @param types
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const Item = ({title, types}) => {
   const navigation = useNavigation();
   const [colorScheme] = useAppColorScheme(tw);
   const isDarkMode = colorScheme === 'dark';
+
   return (
     <View style={tw`px-5 pb-5`}>
       <Text style={tw`text-2xl text-darker dark:text-lighter`}>{title}</Text>
-      {types.map(record => (
+      {types.map(type => (
         <View style={tw`my-2 rounded border border-green`}>
           <Pressable
-            onPress={() => navigation.navigate(record.page || 'EditRecordPage')}
+            onPress={() =>
+              TYPE_PAGE_MAP[type] && navigation.navigate(TYPE_PAGE_MAP[type])
+            }
             style={tw`p-2 px-3`}
             android_ripple={{borderless: false}}>
             <View style={tw`flex-row items-center`}>
-              {React.createElement(getRecordIcon(record), {
-                width: iconSize,
-                height: iconSize,
-              })}
+              {TYPE_ICON_MAP[type] &&
+                React.createElement(TYPE_ICON_MAP[type], {
+                  width: iconSize,
+                  height: iconSize,
+                })}
               <Text style={tw`text-darker dark:text-lighter text-lg mx-3`}>
-                {record.name}
+                {TYPE_NAME_MAP[type]}
               </Text>
               <View style={tw`ml-auto mr-3`}>
                 <Plus
@@ -46,6 +88,12 @@ const Item = ({title, types}) => {
   );
 };
 
+/**
+ *
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const ListHeaderComponent = props => (
   <View style={tw`p-5`}>
     {/*<Text style={tw`text-2xl text-darker dark:text-lighter font-semibold`}>*/}
@@ -67,17 +115,3 @@ const ListHeaderComponent = props => (
     </View>
   </View>
 );
-
-function AddRecordPage(props) {
-  const renderItem = ({item}) => <Item title={item.title} types={item.types} />;
-  return (
-    <FlatList
-      data={RECORD_TYPES}
-      renderItem={renderItem}
-      keyExtractor={item => item.id}
-      ListHeaderComponent={ListHeaderComponent}
-    />
-  );
-}
-
-export default AddRecordPage;

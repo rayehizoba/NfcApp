@@ -1,9 +1,61 @@
 import Contacts from '../assets/img/contacts.svg';
 import Text from '../assets/img/document-text.svg';
 import Link from '../assets/img/Link.svg';
-import {CONTACT_RECORD, TEXT_RECORD, URI_RECORD} from './consts';
+import {
+  CONTACT_RECORD,
+  RTD_MAP, TEXT,
+  TEXT_RECORD,
+  TNF_MAP, URI,
+  URI_RECORD, VCARD,
+} from './consts';
 import {isEqual} from 'lodash';
-import {warn} from 'twrnc/dist/esm/helpers';
+import {Alert, Linking} from 'react-native';
+import {Ndef} from 'react-native-nfc-manager';
+
+/**
+ *
+ * @param uri
+ * @returns {Promise<void>}
+ */
+export async function goToUri(uri) {
+  try {
+    await Linking.openURL(uri);
+  } catch (ex) {
+    console.warn(ex);
+    Alert.alert('Cannot open uri');
+  }
+}
+
+/**
+ *
+ * @param value
+ * @returns {string|null}
+ */
+export function tnfValueToName(value) {
+  for (let name in TNF_MAP) {
+    if (value === TNF_MAP[name]) {
+      return name;
+    }
+  }
+  return null;
+}
+
+/**
+ *
+ * @param value
+ * @returns {string|null}
+ */
+export function rtdValueToName(value) {
+  value = Array.isArray(value)
+    ? value.reduce((acc, byte) => acc + String.fromCharCode(byte), '')
+    : value;
+  for (let name in RTD_MAP) {
+    if (value === RTD_MAP[name]) {
+      return name;
+    }
+  }
+  return null;
+}
 
 /**
  *
@@ -11,8 +63,11 @@ import {warn} from 'twrnc/dist/esm/helpers';
  * @returns {string}
  */
 export const ndefRecordIcon = protocol => {
-  if (protocol >= 1 && protocol <= 4) return 'link-variant';
-  else if (protocol === 5) return 'phone';
+  if (protocol >= 1 && protocol <= 4) {
+    return 'link-variant';
+  } else if (protocol === 5) {
+    return 'phone';
+  }
 };
 
 /**
@@ -33,21 +88,42 @@ export function getValidationErrors(errorObj, key) {
 
 /**
  *
- * @param record
+ * @param ndefRecord
  * @returns {*}
  */
-export const getRecordIcon = record => {
-  if (isEqual(record, CONTACT_RECORD)) {
-    return Contacts;
+export const getRecordIcon = ndefRecord => {
+  const rtdName = rtdValueToName(ndefRecord.type);
+  if (ndefRecord.tnf === Ndef.TNF_WELL_KNOWN) {
+    if (rtdName === URI) {
+      return Link;
+    } else if (rtdName === TEXT) {
+      return Text;
+    }
+  } else if (ndefRecord.ntf === Ndef.MIME_MEDIA) {
+    const mimeTypeStr = Array.isArray(ndefRecord.type)
+      ? String.fromCharCode(...ndefRecord.type)
+      : ndefRecord.type;
+    if (mimeTypeStr === Ndef.MIME_WFA_WSC) {
+    } else if (mimeTypeStr === VCARD) {
+      return Contacts;
+    } else if (mimeTypeStr.indexOf('text') === 0) {
+    } else {
+    }
   }
-  if (isEqual(record, TEXT_RECORD)) {
-    return Text;
-  }
-  if (isEqual(record, URI_RECORD)) {
-    return Link;
-  }
-  return Contacts;
+  return Text;
 };
+// export const getRecordIcon = record => {
+//   if (isEqual(record, CONTACT_RECORD)) {
+//     return Contacts;
+//   }
+//   if (isEqual(record, TEXT_RECORD)) {
+//     return Text;
+//   }
+//   if (isEqual(record, URI_RECORD)) {
+//     return Link;
+//   }
+//   return Contacts;
+// };
 
 /**
  *
@@ -91,3 +167,106 @@ export const getRecordHeading = ({data, record}) => {
   }
   return '';
 };
+
+// export const getNdefRecord
+
+// export function getNdefType({payload, id, type, tnf}) {
+//   // const payload = params.savedRecord?.payload;
+//   if (payload && payload.tech === NfcTech.Ndef) {
+//     if (payload.tnf === Ndef.TNF_WELL_KNOWN) {
+//       if (payload.rtd === Ndef.RTD_TEXT) {
+//         return 'TEXT';
+//       } else if (payload.rtd === Ndef.RTD_URI) {
+//         return 'URI';
+//       }
+//     } else if (payload.tnf === Ndef.TNF_MIME_MEDIA) {
+//       if (payload.mimeType === Ndef.MIME_WFA_WSC) {
+//         return 'WIFI_SIMPLE';
+//       } else if (payload.mimeType === 'text/vcard') {
+//         return 'VCARD';
+//       }
+//     }
+//   }
+//
+//   return params.ndefType;
+// }
+
+// function getRecordPayload() {
+//   if (handlerRef.current?.getValue) {
+//     const payload = {
+//       tech: NfcTech.Ndef,
+//       tnf: Ndef.TNF_WELL_KNOWN,
+//       value: handlerRef.current.getValue(),
+//     };
+//
+//     if (ndefType === 'TEXT') {
+//       payload.rtd = Ndef.RTD_TEXT;
+//     } else if (ndefType === 'URI') {
+//       payload.rtd = Ndef.RTD_URI;
+//     } else if (ndefType === 'WIFI_SIMPLE') {
+//       payload.tnf = Ndef.TNF_MIME_MEDIA;
+//       payload.mimeType = Ndef.MIME_WFA_WSC;
+//     } else if (ndefType === 'VCARD') {
+//       payload.tnf = Ndef.TNF_MIME_MEDIA;
+//       payload.mimeType = 'text/vcard';
+//     } else {
+//       throw new Error('NdefWriteScreen: cannot persist this payload');
+//     }
+//
+//     return payload;
+//   }
+//
+//   return null;
+// }
+//
+
+/**
+ *
+ * @param input
+ * @returns {{}}
+ */
+export function vCardParse(input) {
+  var Re1 = /^(version|fn|title|org):(.+)$/i;
+  var Re2 = /^([^:;]+);([^:]+):(.+)$/;
+  var ReKey = /item\d{1,2}\./;
+  var fields = {};
+
+  input.split(/\r\n|\r|\n/).forEach(function (line) {
+    var results, key;
+
+    if (Re1.test(line)) {
+      results = line.match(Re1);
+      key = results[1].toLowerCase();
+      fields[key] = results[2];
+    } else if (Re2.test(line)) {
+      results = line.match(Re2);
+      key = results[1].replace(ReKey, '').toLowerCase();
+
+      var meta = {};
+      results[2]
+        .split(';')
+        .map(function (p, i) {
+          var match = p.match(/([a-z]+)=(.*)/i);
+          if (match) {
+            return [match[1], match[2]];
+          } else {
+            return ['TYPE' + (i === 0 ? '' : i), p];
+          }
+        })
+        .forEach(function (p) {
+          meta[p[0]] = p[1];
+        });
+
+      if (!fields[key]) {
+        fields[key] = [];
+      }
+
+      fields[key].push({
+        meta: meta,
+        value: results[3].split(';'),
+      });
+    }
+  });
+
+  return fields;
+}

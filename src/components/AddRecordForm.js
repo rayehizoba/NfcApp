@@ -1,21 +1,30 @@
 import React from 'react';
 import tw from '../lib/tailwind';
 import {Pressable, ScrollView, Text, View} from 'react-native';
-import {getRecordIcon} from '../lib/helpers';
 
-function AddRecordForm({children, onPressCancel, onPressSave, record}) {
+function AddRecordForm({
+  children,
+  onPressCancel,
+  onPressSave,
+  title,
+  icon,
+  contentContainerStyle,
+}) {
   return (
     <View style={tw`flex-col flex-1`}>
       <View
         style={tw`bg-white dark:bg-green shadow-md p-4 pt-2 dark:py-3 flex-row items-center`}>
-        {React.createElement(getRecordIcon(record), {
-          width: 21,
-          height: 21,
-        })}
-        <Text style={tw`ml-8 text-dark dark:text-white`}>{record.title}</Text>
+        {icon &&
+          React.createElement(icon, {
+            width: 21,
+            height: 21,
+          })}
+        <Text style={tw`ml-8 text-dark dark:text-white`}>{title}</Text>
       </View>
 
-      <ScrollView contentContainerStyle={tw`p-4 py-8`}>{children}</ScrollView>
+      <ScrollView contentContainerStyle={[tw`p-4 py-8`, contentContainerStyle]}>
+        {children}
+      </ScrollView>
 
       <View style={tw`flex-row p-4`}>
         <Pressable

@@ -5,7 +5,8 @@ import tw from '../lib/tailwind';
 import NfcManager, {Ndef, NfcEvents} from 'react-native-nfc-manager';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import uuid from 'react-native-uuid';
-import {ndefRecordIcon} from '../lib/helpers';
+import {goToUri, rtdValueToName, tnfValueToName} from '../lib/helpers';
+import {TEXT, URI} from '../lib/consts';
 
 function Item({icon = 'information-variant', h1, h2}) {
   return (
@@ -15,7 +16,7 @@ function Item({icon = 'information-variant', h1, h2}) {
         <Icon name={icon} style={tw`text-lighter dark:text-dark text-3xl`} />
       </View>
       <View style={tw`px-2`}>
-        <Text style={tw`text-dark dark:text-lighter font-semibold`}>{h1}</Text>
+        <Text style={tw`text-dark dark:text-lighter font-semibold capitalize`}>{h1}</Text>
         <Text style={tw`text-xs`}>{h2}</Text>
       </View>
       <View>
@@ -39,11 +40,13 @@ function ReadPage(props) {
       }
       setHasNfc(supported);
     }
-
     checkNfc();
   }, []);
 
   React.useEffect(() => {
+    if (!hasNfc) {
+      return;
+    }
     async function scanTag() {
       NfcManager.setEventListener(NfcEvents.DiscoverTag, tag => {
         setTag(tag);
@@ -55,13 +58,21 @@ function ReadPage(props) {
         NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
       };
     }
-
     scanTag();
-  }, []);
+  }, [hasNfc]);
 
   if (tag) {
-    console.warn(tag);
+    // console.warn(tag);
+    const ndefRecordsBytes = (tag.ndefMessage || [])
+      .map(({payload}) => payload.length)
+      .reduce((acc, bytes) => acc + bytes, 0);
     const data = [
+      {
+        id: uuid.v4(),
+        icon: 'information-variant',
+        h1: 'UUID',
+        h2: tag.id || '--',
+      },
       {
         id: uuid.v4(),
         icon: 'information-variant',
@@ -78,7 +89,7 @@ function ReadPage(props) {
         id: uuid.v4(),
         icon: 'database',
         h1: 'Size',
-        h2: '- / ' + tag.maxSize + ' Bytes',
+        h2: ndefRecordsBytes + ' / ' + tag.maxSize + ' Bytes',
       },
       {
         id: uuid.v4(),
@@ -93,20 +104,39 @@ function ReadPage(props) {
         h2: tag.canMakeReadOnly ? 'Yes' : 'No',
       },
       ...(tag.ndefMessage || []).map((ndefRecord, index) => {
-        let icon = null;
-        let h1 = `Record ${index + 1}`;
+        const tnfName = tnfValueToName(ndefRecord.tnf);
+        const rtdName = rtdValueToName(ndefRecord.type);
+        let h1 = `Record ${index + 1}: ${tnfName + ' ' + rtdName}`;
         let h2 = '';
+        let onPress = () => {};
+
         if (ndefRecord.tnf === Ndef.TNF_WELL_KNOWN) {
-          if (ndefRecord.type.every((b, i) => b === Ndef.RTD_BYTES_URI[i])) {
-            const [protocol, ...payload] = ndefRecord.payload;
-            icon = ndefRecordIcon(protocol);
-            h1 += ' - ' + Ndef.RTD_URI_PROTOCOLS[protocol];
-            h2 = Ndef.util.bytesToString(payload);
+          if (rtdName === URI) {
+            const uri = Ndef.uri.decodePayload(ndefRecord.payload);
+            onPress = () => goToUri(uri);
+            h2 = uri;
+          } else if (rtdName === TEXT) {
+            h2 = Ndef.text.decodePayload(ndefRecord.payload);
+          }
+        } else if (ndefRecord.ntf === Ndef.MIME_MEDIA) {
+          const mimeTypeStr = Array.isArray(ndefRecord.type)
+            ? String.fromCharCode(...ndefRecord.type)
+            : ndefRecord.type;
+          if (mimeTypeStr === Ndef.MIME_WFA_WSC) {
+            let credentials = Ndef.wifiSimple.decodePayload(ndefRecord.payload);
+            h2 = credentials.ssid + ' ' + credentials.networkKey;
+          } else if (mimeTypeStr.indexOf('text') === 0) {
+            h2 = Ndef.util.bytesToString(ndefRecord.payload);
+            console.warn(h2);
+          } else {
+            h2 = mimeTypeStr;
           }
         }
+
         return {
           id: uuid.v4(),
-          icon,
+          icon: 'lock',
+          onPress,
           h1,
           h2,
         };

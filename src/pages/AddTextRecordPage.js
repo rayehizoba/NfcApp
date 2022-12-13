@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 import AddRecordForm from '../components/AddRecordForm';
 import ValidatedComponent from '../components/ValidatedComponent';
 import * as recordActions from '../store/record/record.actions';
-import {TEXT_RECORD} from '../lib/consts';
+import {TEXT, TEXT_RECORD, TYPE_ICON_MAP} from '../lib/consts';
 import Validator from '../lib/Validator';
 import tw from '../lib/tailwind';
 
@@ -19,36 +19,29 @@ function AddTextRecordPage({navigation}) {
     text,
   };
   const [formErrors, setFormErrors] = React.useState();
+
   React.useEffect(() => {
-    inputText.current && inputText.current.focus();
+    requestAnimationFrame(() => {
+      inputText.current && inputText.current.focus();
+    });
   }, []);
+
   const onPressCancel = () => navigation.goBack();
   const onPressSave = async () => {
     const validation = new Validator(formData, formRules);
     if (validation.passes()) {
       setFormErrors(null);
-      dispatch(recordActions.createRecord(TEXT_RECORD, formData));
+      dispatch(recordActions.writeNdef({type: TEXT, data: formData.text}));
       navigation.navigate('WritePage');
     } else {
       setFormErrors(validation.errors.all());
     }
   };
-  // const writeNdef = async text => {
-  //   const textRecord = Ndef.textRecord(text);
-  //   const bytes = Ndef.encodeMessage([textRecord]);
-  //
-  //   try {
-  //     await NfcManager.requestTechnology(NfcTech.Ndef);
-  //     await NfcManager.ndefHandler.writeNdefMessage(bytes);
-  //   } catch (ex) {
-  //     // bypass
-  //   } finally {
-  //     await NfcManager.cancelTechnologyRequest();
-  //   }
-  // };
+
   return (
     <AddRecordForm
-      record={TEXT_RECORD}
+      icon={TYPE_ICON_MAP[TEXT]}
+      title="Enter your text"
       onPressCancel={onPressCancel}
       onPressSave={onPressSave}>
       <ValidatedComponent

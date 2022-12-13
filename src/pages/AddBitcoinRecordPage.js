@@ -9,7 +9,7 @@ function AddBitcoinRecordPage(props) {
   return (
     <ScrollView contentContainerStyle={tw`p-5 flex-col flex-1`}>
       <View style={tw`flex-1`}>
-        <Label title="Bitcoin address" style={tw`mb-5`}>
+        <Label title="Bitcoin adr" style={tw`mb-5`}>
           <TextInput
             style={tw`input`}
             placeholder="1GtRQWdhduhyd78GShdkdiHGAvb7R5vhjjxGfm"

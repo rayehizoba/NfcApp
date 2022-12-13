@@ -2,7 +2,7 @@ import React from 'react';
 import {TextInput} from 'react-native';
 import tw from '../lib/tailwind';
 import {Label} from '../components/Label';
-import {CONTACT_RECORD} from '../lib/consts';
+import {TYPE_ICON_MAP, VCARD} from '../lib/consts';
 import AddRecordForm from '../components/AddRecordForm';
 import {useDispatch} from 'react-redux';
 import * as recordActions from '../store/record/record.actions';
@@ -12,49 +12,55 @@ import ValidatedComponent from '../components/ValidatedComponent';
 function AddContactRecordPage({navigation}) {
   const dispatch = useDispatch();
   const inputName = React.useRef(null);
-  const inputCompany = React.useRef(null);
-  const inputAddress = React.useRef(null);
-  const inputPhone = React.useRef(null);
-  const inputMail = React.useRef(null);
-  const inputWebsite = React.useRef(null);
+  const inputOrg = React.useRef(null);
+  const inputAdr = React.useRef(null);
+  const inputTel = React.useRef(null);
+  const inputEmail = React.useRef(null);
+  const inputUrl = React.useRef(null);
   const formRules = {
     name: 'required',
-    phone: 'required',
-    mail: 'email',
-    website: 'url',
+    tel: 'required_without:email',
+    email: 'email|required_without:tel',
+    url: 'url',
   };
   const [name, setName] = React.useState(null);
-  const [company, setCompany] = React.useState(null);
-  const [address, setAddress] = React.useState(null);
-  const [phone, setPhone] = React.useState(null);
-  const [mail, setMail] = React.useState(null);
-  const [website, setWebsite] = React.useState(null);
+  const [org, setOrg] = React.useState(null);
+  const [tel, setTel] = React.useState(null);
+  const [adr, setAdr] = React.useState(null);
+  const [email, setEmail] = React.useState(null);
+  const [url, setUrl] = React.useState(null);
   const formData = {
     name,
-    company,
-    address,
-    phone,
-    mail,
-    website,
+    org,
+    adr,
+    tel,
+    email,
+    url,
   };
   const [formErrors, setFormErrors] = React.useState();
+
   React.useEffect(() => {
-    inputName.current && inputName.current.focus();
+    requestAnimationFrame(() => {
+      inputName.current && inputName.current.focus();
+    });
   }, []);
+
   const onPressCancel = () => navigation.goBack();
   const onPressSave = () => {
     const validation = new Validator(formData, formRules);
     if (validation.passes()) {
       setFormErrors(null);
-      dispatch(recordActions.createRecord(CONTACT_RECORD, formData));
+      dispatch(recordActions.writeNdef({type: VCARD, data: formData}));
       navigation.navigate('WritePage');
     } else {
       setFormErrors(validation.errors.all());
     }
   };
+
   return (
     <AddRecordForm
-      record={CONTACT_RECORD}
+      icon={TYPE_ICON_MAP[VCARD]}
+      title="Enter your contact"
       onPressCancel={onPressCancel}
       onPressSave={onPressSave}>
       <ValidatedComponent
@@ -67,7 +73,7 @@ function AddContactRecordPage({navigation}) {
               ref={inputName}
               value={name}
               onChangeText={setName}
-              onSubmitEditing={() => inputCompany.current.focus()}
+              onSubmitEditing={() => inputOrg.current.focus()}
               style={style}
               placeholder="Linda Martins"
               placeholderTextColor={tw.color('placeholder/50')}
@@ -77,17 +83,17 @@ function AddContactRecordPage({navigation}) {
         )}
       />
       <ValidatedComponent
-        name="company"
+        name="org"
         errors={formErrors}
         style={tw`input`}
         renderComponent={style => (
           <Label title="Company" style={tw`mt-5`}>
             <TextInput
-              ref={inputCompany}
+              ref={inputOrg}
               style={style}
-              value={company}
-              onChangeText={setCompany}
-              onSubmitEditing={() => inputAddress.current.focus()}
+              value={org}
+              onChangeText={setOrg}
+              onSubmitEditing={() => inputAdr.current.focus()}
               placeholder="RazorLabs"
               placeholderTextColor={tw.color('placeholder/50')}
               returnKeyType="next"
@@ -96,17 +102,17 @@ function AddContactRecordPage({navigation}) {
         )}
       />
       <ValidatedComponent
-        name="address"
+        name="adr"
         errors={formErrors}
         style={tw`input`}
         renderComponent={style => (
           <Label title="Address" style={tw`mt-5`}>
             <TextInput
-              ref={inputAddress}
+              ref={inputAdr}
               style={style}
-              value={address}
-              onChangeText={setAddress}
-              onSubmitEditing={() => inputPhone.current.focus()}
+              value={adr}
+              onChangeText={setAdr}
+              onSubmitEditing={() => inputTel.current.focus()}
               placeholder="73, 3rd Avenue FHA phase 1, Abuja"
               placeholderTextColor={tw.color('placeholder/50')}
               returnKeyType="next"
@@ -115,17 +121,17 @@ function AddContactRecordPage({navigation}) {
         )}
       />
       <ValidatedComponent
-        name="phone"
+        name="tel"
         errors={formErrors}
         style={tw`input`}
         renderComponent={style => (
           <Label title="Phone Number" style={tw`mt-5`}>
             <TextInput
-              ref={inputPhone}
+              ref={inputTel}
               style={style}
-              value={phone}
-              onChangeText={setPhone}
-              onSubmitEditing={() => inputMail.current.focus()}
+              value={tel}
+              onChangeText={setTel}
+              onSubmitEditing={() => inputEmail.current.focus()}
               placeholder="+2347041259889"
               placeholderTextColor={tw.color('placeholder/50')}
               returnKeyType="next"
@@ -137,17 +143,17 @@ function AddContactRecordPage({navigation}) {
         )}
       />
       <ValidatedComponent
-        name="mail"
+        name="email"
         errors={formErrors}
         style={tw`input`}
         renderComponent={style => (
           <Label title="Email" style={tw`mt-5`}>
             <TextInput
-              ref={inputMail}
+              ref={inputEmail}
               style={style}
-              value={mail}
-              onChangeText={setMail}
-              onSubmitEditing={() => inputWebsite.current.focus()}
+              value={email}
+              onChangeText={setEmail}
+              onSubmitEditing={() => inputUrl.current.focus()}
               placeholder="abc123@xyz.com"
               placeholderTextColor={tw.color('placeholder/50')}
               returnKeyType="next"
@@ -159,16 +165,16 @@ function AddContactRecordPage({navigation}) {
         )}
       />
       <ValidatedComponent
-        name="website"
+        name="url"
         errors={formErrors}
         style={tw`input`}
         renderComponent={style => (
           <Label title="Website" style={tw`mt-5`}>
             <TextInput
-              ref={inputWebsite}
+              ref={inputUrl}
               style={style}
-              value={website}
-              onChangeText={setWebsite}
+              value={url}
+              onChangeText={setUrl}
               onSubmitEditing={onPressSave}
               placeholder="https://www.razorlabs.com"
               placeholderTextColor={tw.color('placeholder/50')}

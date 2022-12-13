@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useFloating, shift, offset} from '@floating-ui/react-native';
 import tw from '../lib/tailwind';
 import AddRecordForm from '../components/AddRecordForm';
-import {URI_RECORD} from '../lib/consts';
+import {TYPE_ICON_MAP, URI, URI_RECORD} from '../lib/consts';
 import {useDispatch} from 'react-redux';
 import Validator from '../lib/Validator';
 import * as recordActions from '../store/record/record.actions';
@@ -12,6 +12,7 @@ import ValidatedComponent from '../components/ValidatedComponent';
 
 function AddUrlRecordPage({navigation}) {
   const dispatch = useDispatch();
+  const inputUrl = React.useRef(null);
   const {x, y, reference, floating} = useFloating({
     placement: 'bottom-start',
     middleware: [shift(), offset(5)],
@@ -30,6 +31,13 @@ function AddUrlRecordPage({navigation}) {
     url: option.value + url,
   };
   const [formErrors, setFormErrors] = React.useState();
+
+  React.useEffect(() => {
+    requestAnimationFrame(() => {
+      inputUrl.current && inputUrl.current.focus();
+    });
+  }, []);
+
   const onPressOption = option => () => {
     setOption(option);
     setShowOptions(false);
@@ -39,7 +47,7 @@ function AddUrlRecordPage({navigation}) {
     const validation = new Validator(formData, formRules);
     if (validation.passes()) {
       setFormErrors(null);
-      dispatch(recordActions.createRecord(URI_RECORD, formData));
+      dispatch(recordActions.writeNdef({type: URI, data: formData.url}));
       navigation.navigate('WritePage');
     } else {
       setFormErrors(validation.errors.all());
@@ -48,9 +56,11 @@ function AddUrlRecordPage({navigation}) {
   };
   return (
     <AddRecordForm
-      record={URI_RECORD}
+      title="Enter your URL"
+      icon={TYPE_ICON_MAP[URL]}
       onPressCancel={onPressCancel}
-      onPressSave={onPressSave}>
+      onPressSave={onPressSave}
+      contentContainerStyle={tw`flex-1`}>
       <ValidatedComponent
         name="url"
         errors={formErrors}
@@ -83,11 +93,15 @@ function AddUrlRecordPage({navigation}) {
               </View>
             )}
             <TextInput
+              ref={inputUrl}
               style={[style, tw`flex-1`]}
               value={url}
               onChangeText={setUrl}
               placeholder="www.fastdev.com"
               placeholderTextColor={tw.color('placeholder/50')}
+              onSubmitEditing={onPressSave}
+              autoCapitalize="none"
+              keyboardType="url"
             />
           </View>
         )}

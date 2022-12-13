@@ -7,15 +7,27 @@ import tw from '../lib/tailwind';
 import SortArrow from '../assets/img/Sort arrow.svg';
 import {useAppColorScheme} from 'twrnc';
 import {useSelector} from 'react-redux';
-import {selectRecordsCollection} from '../store/records/records.selectors';
-import {getRecordHeading, getRecordIcon, getRecordText} from '../lib/helpers';
+import {
+  selectRecordsBytes,
+  selectRecordsCollection,
+} from '../store/records/records.selectors';
+import {
+  getRecordHeading,
+  getRecordIcon,
+  getRecordText,
+  goToUri,
+  rtdValueToName,
+  tnfValueToName,
+  vCardParse,
+} from '../lib/helpers';
+import {Ndef} from 'react-native-nfc-manager';
+import {TEXT, URI, VCARD} from '../lib/consts';
+import Contacts from '../assets/img/contacts.svg';
 
 function WritePage({navigation}) {
   const iconSize = 20;
   const records = useSelector(selectRecordsCollection);
-  const recordsBytes = records
-    .map(record => getRecordText(record).length)
-    .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
+  const recordsBytes = useSelector(selectRecordsBytes);
   const onPressWrite = () => navigation.navigate('WriteTagModal');
   return (
     <ScrollView contentContainerStyle={tw`p-4`}>
@@ -50,33 +62,72 @@ function WritePage({navigation}) {
           <View style={tw`w-full border-b border-accent my-1`} />
         </>
       )}
-      {records.map(({data, record}) => (
-        <RecordItem data={data} record={record} />
+      {records.map(record => (
+        <RecordItem ndefRecord={record} />
       ))}
+      {/*<Text>{JSON.stringify(records, null, 2)}</Text>*/}
     </ScrollView>
   );
 }
 
 export default WritePage;
 
-const RecordItem = ({data, record}) => {
+/**
+ *
+ * @param ndefRecord
+ * @returns {JSX.Element}
+ * @constructor
+ */
+const RecordItem = ({ndefRecord}) => {
+  const {id, tnf, ntf, type, payload} = ndefRecord;
   const iconSize = 20;
   const [colorScheme] = useAppColorScheme(tw);
   const isDarkMode = colorScheme === 'dark';
-  const text = getRecordText({data, record});
+  const rtdName = rtdValueToName(type);
+  let name = rtdName;
+  let text = '';
+
+  if (tnf === Ndef.TNF_WELL_KNOWN) {
+    if (rtdName === URI) {
+      name = 'Link';
+      text = Ndef.uri.decodePayload(payload);
+    } else if (rtdName === TEXT) {
+      name = 'Text';
+      text = Ndef.text.decodePayload(payload);
+    }
+  } else if (ntf === Ndef.MIME_MEDIA) {
+    const mimeTypeStr = Array.isArray(type)
+      ? String.fromCharCode(...type)
+      : type;
+    if (mimeTypeStr === Ndef.MIME_WFA_WSC) {
+      let credentials = Ndef.wifiSimple.decodePayload(payload);
+      text = credentials.ssid + ' ' + credentials.networkKey;
+    } else if (mimeTypeStr.indexOf('text') === 0) {
+      text = Ndef.util.bytesToString(ndefRecord.payload);
+      if (mimeTypeStr === VCARD) {
+        name = 'Contact';
+        // const vCard = vCardParse(text);
+        // console.warn(JSON.stringify(vCard, null, 2));
+      }
+    } else {
+      text = mimeTypeStr;
+    }
+  }
+
   return (
     <Pressable
       style={tw`my-1.5 rounded-md overflow-hidden flex-row p-3 py-1 border border-gray dark:border-lighter/40 bg-neutral bg-opacity-50 dark:bg-lighter dark:bg-opacity-10`}
       android_ripple={{borderless: false}}>
       <View style={tw`my-2.5`}>
-        {React.createElement(getRecordIcon(record), {
+        {React.createElement(getRecordIcon(ndefRecord), {
           width: 21,
           height: 21,
         })}
       </View>
       <View>
-        <Text style={tw`ml-3 text-dark dark:text-lighter font-semibold`}>
-          {getRecordHeading({data, record})}
+        <Text
+          style={tw`ml-3 text-dark dark:text-lighter font-semibold capitalize`}>
+          {name}: {payload.length} Bytes
         </Text>
         <Text style={tw`ml-3 text-gray dark:text-lighter/60 text-xs`}>
           {text}
