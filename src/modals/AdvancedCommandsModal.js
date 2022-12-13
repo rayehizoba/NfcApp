@@ -2,12 +2,11 @@ import React from 'react';
 import tw from '../lib/tailwind';
 import {Image, Pressable, Text, View} from 'react-native';
 import ModalTemplate from './ModalTemplate';
-import NfcTools from '../assets/img/nfctools.svg';
 
 function AdvancedCommandsModal({navigation}) {
   return (
-    <ModalTemplate containerStyle={tw`w-auto px-4`}>
-      <View style={tw`flex flex-row items-center mb-4`}>
+    <ModalTemplate containerStyle={tw`w-80 px-4`}>
+      <View style={tw`flex flex-row items-center justify-center mb-4`}>
         <Image
           style={tw`w-6 h-6 mr-2`}
           source={require('../assets/img/Error.png')}
