@@ -1,23 +1,19 @@
 import React from 'react';
-import tw from '../lib/tailwind';
-import {Image, Pressable, Text, View} from 'react-native';
 import ModalTemplate from './ModalTemplate';
+import {Pressable, Text, View} from 'react-native';
+import tw from '../lib/tailwind';
 
-function LockTagModal({navigation}) {
+function ProEditionUpgradeModal({navigation, route}) {
+  const {title = 'Pro Edition'} = route.params;
   return (
-    <ModalTemplate title="Lock Tag">
+    <ModalTemplate title={title}>
       <View style={tw`pt-2 pb-7 flex flex-col items-center`}>
-        <Image
-          style={tw`w-6 h-6`}
-          source={require('../assets/img/Error.png')}
-          resizeMode="contain"
-        />
+        <Text style={tw`text-center text-sm text-dark dark:text-lighter mt-2 mb-4`}>
+          You cannot access this feature at this time.
+        </Text>
         <Text
           style={tw`text-center font-semibold text-sm text-dark dark:text-lighter`}>
-          This process cannot be reverted !
-        </Text>
-        <Text style={tw`text-center text-sm text-dark dark:text-lighter mt-2`}>
-          Are you sure you want to continue?
+          Upgrade to the Pro Edition to gain access.
         </Text>
       </View>
       <View style={tw`flex flex-row justify-end`}>
@@ -30,11 +26,11 @@ function LockTagModal({navigation}) {
           </Text>
         </Pressable>
         <Pressable
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.replace('ProEditionPage')}
           style={tw`ml-2 btn p-1 px-2`}
           android_ripple={{borderless: false}}>
           <Text style={tw`text-white dark:text-lighter font-semibold`}>
-            Proceed
+            Upgrade
           </Text>
         </Pressable>
       </View>
@@ -42,4 +38,4 @@ function LockTagModal({navigation}) {
   );
 }
 
-export default LockTagModal;
+export default ProEditionUpgradeModal;

@@ -1,11 +1,6 @@
 import {types} from './record.reducer';
-import NfcManager, {Ndef, NfcTech} from 'react-native-nfc-manager';
+import {Ndef} from 'react-native-nfc-manager';
 import {TEXT, URI, VCARD, WIFI_SIMPLE} from '../../lib/consts';
-
-export const createRecord = (record, data) => ({
-  type: types.CREATE,
-  data,
-});
 
 /**
  *
@@ -37,3 +32,24 @@ export const writeNdef =
       });
     }
   };
+
+/**
+ *
+ * @param record
+ * @returns {{data, type: string}}
+ */
+export const duplicateNdefRecord = record => ({
+  type: types.DUPLICATE,
+  data: record,
+});
+
+
+/**
+ *
+ * @param record
+ * @returns {{data, type: *}}
+ */
+export const deleteNdefRecord = record => ({
+  type: types.DELETE,
+  data: record,
+});

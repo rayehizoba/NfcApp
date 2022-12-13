@@ -36,7 +36,7 @@ function AddUrlRecordPage({navigation}) {
     requestAnimationFrame(() => {
       inputUrl.current && inputUrl.current.focus();
     });
-  }, []);
+  }, [option]);
 
   const onPressOption = option => () => {
     setOption(option);
@@ -51,7 +51,7 @@ function AddUrlRecordPage({navigation}) {
       navigation.navigate('WritePage');
     } else {
       setFormErrors(validation.errors.all());
-      console.warn(formData);
+      // console.warn(formData);
     }
   };
   return (

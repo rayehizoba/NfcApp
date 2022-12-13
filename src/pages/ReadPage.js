@@ -1,47 +1,17 @@
 import React from 'react';
-import {FlatList, Pressable, Text, View} from 'react-native';
+import {Pressable, ScrollView, Text, ToastAndroid, View} from 'react-native';
 import NfcTools from '../assets/img/nfctools.svg';
 import tw from '../lib/tailwind';
-import NfcManager, {Ndef, NfcEvents} from 'react-native-nfc-manager';
+import NfcManager, {NfcEvents} from 'react-native-nfc-manager';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import uuid from 'react-native-uuid';
-import {goToUri, rtdValueToName, tnfValueToName} from '../lib/helpers';
-import {TEXT, URI} from '../lib/consts';
-
-function Item({icon = 'information-variant', h1, h2}) {
-  return (
-    <View style={tw`flex-row items-center px-4 py-3`}>
-      <View
-        style={tw`bg-dark dark:bg-neutral rounded-full w-11 h-11 flex-row items-center justify-center`}>
-        <Icon name={icon} style={tw`text-lighter dark:text-dark text-3xl`} />
-      </View>
-      <View style={tw`px-2`}>
-        <Text style={tw`text-dark dark:text-lighter font-semibold capitalize`}>{h1}</Text>
-        <Text style={tw`text-xs`}>{h2}</Text>
-      </View>
-      <View>
-        <Pressable onPress={() => {}}>
-          {/*<Icon style={tw``} name="dots" />*/}
-        </Pressable>
-      </View>
-    </View>
-  );
-}
+import NdefRecordItem from '../components/NdefRecordItem';
+import {useSelector} from 'react-redux';
+import {selectHasNfc} from '../store/app/app.selectors';
 
 function ReadPage(props) {
-  const [hasNfc, setHasNfc] = React.useState(false);
+  const hasNfc = useSelector(selectHasNfc);
   const [tag, setTag] = React.useState();
-
-  React.useEffect(() => {
-    async function checkNfc() {
-      const supported = await NfcManager.isSupported();
-      if (supported) {
-        await NfcManager.start();
-      }
-      setHasNfc(supported);
-    }
-    checkNfc();
-  }, []);
 
   React.useEffect(() => {
     if (!hasNfc) {
@@ -50,15 +20,15 @@ function ReadPage(props) {
     async function scanTag() {
       NfcManager.setEventListener(NfcEvents.DiscoverTag, tag => {
         setTag(tag);
-        console.warn('tag found', tag);
+        ToastAndroid.show('New tag read', ToastAndroid.SHORT);
+        // console.warn('tag found', tag);
       });
       await NfcManager.registerTagEvent();
-
       return () => {
         NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
       };
     }
-    scanTag();
+    return scanTag();
   }, [hasNfc]);
 
   if (tag) {
@@ -66,7 +36,7 @@ function ReadPage(props) {
     const ndefRecordsBytes = (tag.ndefMessage || [])
       .map(({payload}) => payload.length)
       .reduce((acc, bytes) => acc + bytes, 0);
-    const data = [
+    const tagData = [
       {
         id: uuid.v4(),
         icon: 'information-variant',
@@ -75,7 +45,7 @@ function ReadPage(props) {
       },
       {
         id: uuid.v4(),
-        icon: 'information-variant',
+        icon: 'nfc-variant',
         h1: 'Technologies available',
         h2: tag.techTypes.map(techType => techType.split('.').pop()).join(', '),
       },
@@ -103,58 +73,35 @@ function ReadPage(props) {
         h1: 'Can be made read-only',
         h2: tag.canMakeReadOnly ? 'Yes' : 'No',
       },
-      ...(tag.ndefMessage || []).map((ndefRecord, index) => {
-        const tnfName = tnfValueToName(ndefRecord.tnf);
-        const rtdName = rtdValueToName(ndefRecord.type);
-        let h1 = `Record ${index + 1}: ${tnfName + ' ' + rtdName}`;
-        let h2 = '';
-        let onPress = () => {};
-
-        if (ndefRecord.tnf === Ndef.TNF_WELL_KNOWN) {
-          if (rtdName === URI) {
-            const uri = Ndef.uri.decodePayload(ndefRecord.payload);
-            onPress = () => goToUri(uri);
-            h2 = uri;
-          } else if (rtdName === TEXT) {
-            h2 = Ndef.text.decodePayload(ndefRecord.payload);
-          }
-        } else if (ndefRecord.ntf === Ndef.MIME_MEDIA) {
-          const mimeTypeStr = Array.isArray(ndefRecord.type)
-            ? String.fromCharCode(...ndefRecord.type)
-            : ndefRecord.type;
-          if (mimeTypeStr === Ndef.MIME_WFA_WSC) {
-            let credentials = Ndef.wifiSimple.decodePayload(ndefRecord.payload);
-            h2 = credentials.ssid + ' ' + credentials.networkKey;
-          } else if (mimeTypeStr.indexOf('text') === 0) {
-            h2 = Ndef.util.bytesToString(ndefRecord.payload);
-            console.warn(h2);
-          } else {
-            h2 = mimeTypeStr;
-          }
-        }
-
-        return {
-          id: uuid.v4(),
-          icon: 'lock',
-          onPress,
-          h1,
-          h2,
-        };
-      }),
     ];
 
     return (
-      <FlatList
-        data={data}
-        renderItem={({item}) => <Item {...item} />}
-        keyExtractor={item => item.id}
-      />
+      <ScrollView contentContainerStyle={tw`p-4`}>
+        {tagData.map(({id, icon, h1, h2}) => (
+          <Pressable
+            key={id}
+            style={tw`my-1.5 rounded-md overflow-hidden flex-row items-center px-3 py-1 border border-primary dark:border-green bg-green/100 dark:bg-green/50`}
+            android_ripple={{borderless: false}}>
+            <Icon
+              name={icon}
+              style={tw`text-lighter dark:text-dark text-2xl`}
+            />
+            <View>
+              <Text style={tw`ml-3 text-lighter font-bold text-sm`}>{h1}</Text>
+              <Text style={tw`ml-3 text-lighter text-xs`}>{h2}</Text>
+            </View>
+          </Pressable>
+        ))}
+        {(tag.ndefMessage || []).length > 0 && (
+          <>
+            <View style={tw`w-full border-b border-accent my-1`} />
+            {(tag.ndefMessage || []).map(ndefRecord => (
+              <NdefRecordItem ndefRecord={ndefRecord} />
+            ))}
+          </>
+        )}
+      </ScrollView>
     );
-    // return (
-    //   <ScrollView contentContainerStyle={tw`p-5`}>
-    //     {/*<Text>{JSON.stringify(tag, null, 2)}</Text>*/}
-    //   </ScrollView>
-    // );
   }
 
   return (

@@ -1,5 +1,6 @@
 export const types = {
-  CREATE: 'RECORD/CREATE',
+  DELETE: 'RECORD/DELETE',
+  DUPLICATE: 'RECORD/DUPLICATE',
   WRITE: 'RECORD/WRITE',
   SET: 'RECORD/SET',
 };
@@ -11,12 +12,6 @@ const initialState = {
 export default function reducer(state = {...initialState}, action) {
   switch (action.type) {
     case types.SET:
-      return {
-        ...state,
-        model: action.data,
-      };
-
-    case types.CREATE:
       return {
         ...state,
         model: action.data,

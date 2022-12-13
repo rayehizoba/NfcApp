@@ -17,6 +17,14 @@ import AppInfoPage from '../pages/AppInfoPage';
 import {useAppColorScheme} from 'twrnc';
 import AddRecordNavigator from './AddRecordNavigator';
 import WriteTagModal from '../modals/WriteTagModal';
+import NdefRecordMenuModal from '../modals/NdefRecordMenuModal';
+import MoreOptionsPage from '../pages/MoreOptionsPage';
+import ClearRecordsModal from '../modals/ClearRecordsModal';
+import ReadTagModal from '../modals/ReadTagModal';
+import NfcManager from 'react-native-nfc-manager';
+import {useDispatch} from 'react-redux';
+import * as appActions from '../store/app/app.actions';
+import ProEditionUpgradeModal from '../modals/ProEditionUpgradeModal';
 
 const Stack = createStackNavigator();
 
@@ -26,32 +34,80 @@ const popUpModalScreenOptions = {
 };
 
 function AuthNavigator() {
+  const dispatch = useDispatch();
+  const [colorScheme] = useAppColorScheme(tw);
+  const isDarkMode = colorScheme === 'dark';
+
+  React.useEffect(() => {
+    async function checkNfc() {
+      const supported = await NfcManager.isSupported();
+      if (supported) {
+        await NfcManager.start();
+      }
+      dispatch(appActions.setHasNfc(supported));
+    }
+    checkNfc();
+  }, []);
+
   return (
     <Stack.Navigator
       screenOptions={{
         cardOverlayEnabled: true,
         cardStyle: tw`bg-transparent`,
         contentStyle: tw`bg-transparent`,
-        headerStyle: tw`bg-primary/100 dark:bg-secondary/50`,
-        headerTintColor: tw.color('lighter'),
-        headerTitle: '',
-        headerShadowVisible: false,
+        // headerStyle: tw`bg-primary/100 dark:bg-secondary/50`,
+        // headerTintColor: tw.color('lighter'),
+        // headerTitle: '',
+        // headerShadowVisible: false,
         headerShown: false,
       }}>
       <Stack.Screen
         name="MainNavigator"
         component={MainNavigator}
-        options={{headerShown: false}}
+        // options={{headerShown: false}}
       />
       <Stack.Screen
         name="AddRecordNavigator"
         component={AddRecordNavigator}
-        options={{headerShown: false}}
+        // options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MoreOptionsPage"
+        component={MoreOptionsPage}
+        options={{
+          cardOverlayEnabled: true,
+          cardStyle: isDarkMode ? tw`bg-darker` : tw`bg-white`,
+          contentStyle: tw`bg-transparent`,
+          headerStyle: tw`bg-white dark:bg-secondary shadow-md`,
+          headerTintColor: tw.color(isDarkMode ? 'lighter' : 'primary'),
+          headerTitle: 'More Options',
+          headerShown: true,
+        }}
       />
       <Stack.Screen name="ProEditionPage" component={ProEditionPage} />
       <Stack.Screen name="AppInfoPage" component={AppInfoPage} />
 
       {/* Modals */}
+      <Stack.Screen
+        name="ProEditionUpgradeModal"
+        component={ProEditionUpgradeModal}
+        options={popUpModalScreenOptions}
+      />
+      <Stack.Screen
+        name="ReadTagModal"
+        component={ReadTagModal}
+        options={popUpModalScreenOptions}
+      />
+      <Stack.Screen
+        name="ClearRecordsModal"
+        component={ClearRecordsModal}
+        options={popUpModalScreenOptions}
+      />
+      <Stack.Screen
+        name="NdefRecordMenuModal"
+        component={NdefRecordMenuModal}
+        options={popUpModalScreenOptions}
+      />
       <Stack.Screen
         name="WriteTagModal"
         component={WriteTagModal}

@@ -2,21 +2,21 @@ import React from 'react';
 import tw from '../lib/tailwind';
 import {Image, Pressable, Text, View} from 'react-native';
 import ModalTemplate from './ModalTemplate';
+import NfcTools from '../assets/img/nfctools.svg';
+import {useDispatch} from 'react-redux';
+import * as recordsActions from '../store/records/records.actions';
 
-function LockTagModal({navigation}) {
+function ClearRecordsModal({navigation}) {
+  const dispatch = useDispatch();
+  const onPressProceed = () => {
+    dispatch(recordsActions.clearRecords());
+    navigation.navigate('WritePage');
+  };
   return (
-    <ModalTemplate title="Lock Tag">
-      <View style={tw`pt-2 pb-7 flex flex-col items-center`}>
-        <Image
-          style={tw`w-6 h-6`}
-          source={require('../assets/img/Error.png')}
-          resizeMode="contain"
-        />
+    <ModalTemplate title="Clear Current Records" containerStyle={tw`w-72`}>
+      <View style={tw`py-12 flex flex-col items-center`}>
         <Text
-          style={tw`text-center font-semibold text-sm text-dark dark:text-lighter`}>
-          This process cannot be reverted !
-        </Text>
-        <Text style={tw`text-center text-sm text-dark dark:text-lighter mt-2`}>
+          style={tw`text-center font-semibold text-base text-dark dark:text-lighter w-48`}>
           Are you sure you want to continue?
         </Text>
       </View>
@@ -30,7 +30,7 @@ function LockTagModal({navigation}) {
           </Text>
         </Pressable>
         <Pressable
-          onPress={() => navigation.goBack()}
+          onPress={onPressProceed}
           style={tw`ml-2 btn p-1 px-2`}
           android_ripple={{borderless: false}}>
           <Text style={tw`text-white dark:text-lighter font-semibold`}>
@@ -42,4 +42,4 @@ function LockTagModal({navigation}) {
   );
 }
 
-export default LockTagModal;
+export default ClearRecordsModal;
