@@ -15,8 +15,10 @@ function AppInfoPage(props) {
     <View style={tw`flex-1 p-5`}>
       {Object.keys(info).map(key => (
         <View style={tw`flex flex-row justify-between pb-4`}>
-          <Text style={tw`font-semibold text-dark`}>{key}</Text>
-          <Text style={tw`text-dark`}>{info[key]}</Text>
+          <Text style={tw`font-semibold text-dark dark:text-lighter`}>
+            {key}
+          </Text>
+          <Text style={tw`text-dark dark:text-lighter`}>{info[key]}</Text>
         </View>
       ))}
     </View>

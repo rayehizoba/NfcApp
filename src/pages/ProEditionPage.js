@@ -30,9 +30,9 @@ function ProEditionPage(props) {
         ))}
       </View>
       <Pressable
-        style={tw`btn bg-accent w-40 mt-5`}
+        style={tw`btn bg-accent w-56 mt-5 py-2`}
         android_ripple={{borderless: false}}>
-        <Text style={tw`font-semibold`}>$ 5.99</Text>
+        <Text style={tw`font-bold text-lg text-dark`}>$ 5.99</Text>
       </Pressable>
     </View>
   );

@@ -28,7 +28,10 @@ function ReadPage(props) {
         NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
       };
     }
-    return scanTag();
+    scanTag();
+    return () => {
+      NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
+    };
   }, [hasNfc]);
 
   if (tag) {
@@ -82,10 +85,7 @@ function ReadPage(props) {
             key={id}
             style={tw`my-1.5 rounded-md overflow-hidden flex-row items-center px-3 py-1 border border-primary dark:border-green bg-green/100 dark:bg-green/50`}
             android_ripple={{borderless: false}}>
-            <Icon
-              name={icon}
-              style={tw`text-lighter dark:text-dark text-2xl`}
-            />
+            <Icon name={icon} style={tw`text-lighter text-2xl`} />
             <View>
               <Text style={tw`ml-3 text-lighter font-bold text-sm`}>{h1}</Text>
               <Text style={tw`ml-3 text-lighter text-xs`}>{h2}</Text>

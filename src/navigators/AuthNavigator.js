@@ -37,6 +37,14 @@ function AuthNavigator() {
   const dispatch = useDispatch();
   const [colorScheme] = useAppColorScheme(tw);
   const isDarkMode = colorScheme === 'dark';
+  const screenOptions = {
+    cardOverlayEnabled: true,
+    cardStyle: isDarkMode ? tw`bg-darker` : tw`bg-white`,
+    contentStyle: tw`bg-transparent`,
+    headerStyle: tw`bg-white dark:bg-secondary shadow-md`,
+    headerTintColor: tw.color(isDarkMode ? 'lighter' : 'primary'),
+    headerShown: true,
+  };
 
   React.useEffect(() => {
     async function checkNfc() {
@@ -52,13 +60,8 @@ function AuthNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        cardOverlayEnabled: true,
+        ...screenOptions,
         cardStyle: tw`bg-transparent`,
-        contentStyle: tw`bg-transparent`,
-        // headerStyle: tw`bg-primary/100 dark:bg-secondary/50`,
-        // headerTintColor: tw.color('lighter'),
-        // headerTitle: '',
-        // headerShadowVisible: false,
         headerShown: false,
       }}>
       <Stack.Screen
@@ -75,17 +78,26 @@ function AuthNavigator() {
         name="MoreOptionsPage"
         component={MoreOptionsPage}
         options={{
-          cardOverlayEnabled: true,
-          cardStyle: isDarkMode ? tw`bg-darker` : tw`bg-white`,
-          contentStyle: tw`bg-transparent`,
-          headerStyle: tw`bg-white dark:bg-secondary shadow-md`,
-          headerTintColor: tw.color(isDarkMode ? 'lighter' : 'primary'),
+          ...screenOptions,
           headerTitle: 'More Options',
-          headerShown: true,
         }}
       />
-      <Stack.Screen name="ProEditionPage" component={ProEditionPage} />
-      <Stack.Screen name="AppInfoPage" component={AppInfoPage} />
+      <Stack.Screen
+        name="ProEditionPage"
+        component={ProEditionPage}
+        options={{
+          ...screenOptions,
+          headerTitle: 'Pro Edition',
+        }}
+      />
+      <Stack.Screen
+        name="AppInfoPage"
+        component={AppInfoPage}
+        options={{
+          ...screenOptions,
+          headerTitle: 'App info',
+        }}
+      />
 
       {/* Modals */}
       <Stack.Screen

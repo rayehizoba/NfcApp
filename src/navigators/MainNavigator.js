@@ -21,7 +21,7 @@ function MainNavigator(props) {
   const isDarkMode = colorScheme === 'dark';
   return (
     <Tab.Navigator
-      initialRouteName="WritePage"
+      // initialRouteName="WritePage"
       screenOptions={({route}) => ({
         tabBarIcon: ({color, size}) => {
           switch (route.name) {

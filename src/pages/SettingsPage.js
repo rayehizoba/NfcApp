@@ -2,9 +2,12 @@ import React from 'react';
 import {Pressable, Switch, Text, View} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import tw from '../lib/tailwind';
+import {useAppColorScheme} from 'twrnc';
 
 function SettingsPage({navigation}) {
-  const [darkMode, setDarkMode] = React.useState(false);
+  const [colorScheme] = useAppColorScheme(tw);
+  const isDarkMode = colorScheme === 'dark';
+  const [darkMode, setDarkMode] = React.useState(isDarkMode);
   const toggleSwitch = () => setDarkMode(previousState => !previousState);
   return (
     <View style={tw``}>

@@ -8,7 +8,8 @@ function ProEditionUpgradeModal({navigation, route}) {
   return (
     <ModalTemplate title={title}>
       <View style={tw`pt-2 pb-7 flex flex-col items-center`}>
-        <Text style={tw`text-center text-sm text-dark dark:text-lighter mt-2 mb-4`}>
+        <Text
+          style={tw`text-center text-sm text-dark dark:text-lighter mt-2 mb-4`}>
           You cannot access this feature at this time.
         </Text>
         <Text
