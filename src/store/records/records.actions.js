@@ -24,3 +24,13 @@ export const importRecords = records => {
     data: records,
   };
 };
+
+/**
+ *
+ * @param records
+ * @returns {{data, type: *}}
+ */
+export const setRecords = records => ({
+  type: types.SET,
+  data: records,
+});

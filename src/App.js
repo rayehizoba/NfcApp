@@ -21,25 +21,28 @@ import GuestNavigator from './navigators/GuestNavigator';
 import store, {persistor} from './store';
 import {PersistGate} from 'redux-persist/integration/react';
 import {Provider} from 'react-redux';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const App: () => Node = () => {
   useDeviceContext(tw);
   const [colorScheme] = useAppColorScheme(tw);
   const isDarkMode = colorScheme === 'dark';
   return (
-    <Provider store={store}>
-      <PersistGate persistor={persistor} loading={null}>
-        <NavigationContainer theme={isDarkMode ? DarkTheme : DefaultTheme}>
-          <SafeAreaView style={tw`bg-lighter dark:bg-darker flex-1`}>
-            <StatusBar
-              barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-            />
-            <AuthNavigator />
-            {/*<GuestNavigator />*/}
-          </SafeAreaView>
-        </NavigationContainer>
-      </PersistGate>
-    </Provider>
+    <GestureHandlerRootView style={tw`flex-1`}>
+      <Provider store={store}>
+        <PersistGate persistor={persistor} loading={null}>
+          <NavigationContainer theme={isDarkMode ? DarkTheme : DefaultTheme}>
+            <SafeAreaView style={tw`bg-lighter dark:bg-darker flex-1`}>
+              <StatusBar
+                barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+              />
+              <AuthNavigator />
+              {/*<GuestNavigator />*/}
+            </SafeAreaView>
+          </NavigationContainer>
+        </PersistGate>
+      </Provider>
+    </GestureHandlerRootView>
   );
 };
 

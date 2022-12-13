@@ -1,6 +1,7 @@
 import {types as recordTypes} from '../record/record.reducer';
 
 export const types = {
+  SET: 'RECORDS/SET',
   IMPORT: 'RECORDS/IMPORT',
   CLEAR: 'RECORDS/CLEAR',
 };
@@ -11,6 +12,12 @@ const initialState = {
 
 export default function reducer(state = {...initialState}, action) {
   switch (action.type) {
+    case types.SET:
+      return {
+        ...state,
+        collection: action.data,
+      };
+
     case types.IMPORT:
       return {
         ...state,

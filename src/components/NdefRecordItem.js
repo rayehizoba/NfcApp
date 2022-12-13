@@ -1,15 +1,20 @@
 import React from 'react';
 import {useAppColorScheme} from 'twrnc';
 import {Ndef} from 'react-native-nfc-manager';
-import {Pressable, Text, View} from 'react-native';
+import {Animated, Pressable, Text, View} from 'react-native';
 import {getRecordIcon, rtdValueToName} from '../lib/helpers';
 import SortArrow from '../assets/img/Sort arrow.svg';
 import {TEXT, URI, VCARD} from '../lib/consts';
 import tw from '../lib/tailwind';
-import {useNavigation} from '@react-navigation/native';
 
-const NdefRecordItem = ({ndefRecord, sortable, onPress}) => {
-  const navigation = useNavigation();
+const NdefRecordItem = ({
+  active,
+  ndefRecord,
+  sortable,
+  onPress,
+  onLongPress,
+  disabled,
+}) => {
   const {id, tnf, ntf, type, payload} = ndefRecord;
   const iconSize = 20;
   const [colorScheme] = useAppColorScheme(tw);
@@ -47,15 +52,22 @@ const NdefRecordItem = ({ndefRecord, sortable, onPress}) => {
 
   return (
     <Pressable
+      disabled={disabled}
       onPress={onPress}
-      style={tw`my-1.5 rounded-md overflow-hidden flex-row p-3 py-1 border border-gray dark:border-lighter/40 bg-neutral bg-opacity-50 dark:bg-lighter dark:bg-opacity-10`}
+      onLongPress={onLongPress}
+      style={[
+        tw`my-1.5 rounded-md overflow-hidden flex-row p-3 py-1 border border-gray dark:border-lighter/40`,
+        active
+          ? tw`bg-neutral/75 dark:bg-lighter/25`
+          : tw`bg-neutral/50 dark:bg-lighter/10`,
+      ]}
       android_ripple={{borderless: false}}>
-      <View style={tw`my-2.5`}>
+      <Animated.View style={tw`my-2.5`}>
         {React.createElement(getRecordIcon(ndefRecord), {
           width: 21,
           height: 21,
         })}
-      </View>
+      </Animated.View>
       <View>
         <Text
           style={tw`ml-3 text-dark dark:text-lighter font-semibold capitalize`}>
@@ -67,8 +79,8 @@ const NdefRecordItem = ({ndefRecord, sortable, onPress}) => {
       </View>
       {sortable && (
         <SortArrow
+          style={tw`ml-auto my-3`}
           stroke={tw.color(isDarkMode ? 'lighter' : 'dark')}
-          style={tw`ml-auto my-2.5`}
           width={iconSize}
           height={iconSize}
         />
