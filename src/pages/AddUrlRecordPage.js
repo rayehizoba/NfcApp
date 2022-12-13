@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useFloating, shift, offset} from '@floating-ui/react-native';
 import tw from '../lib/tailwind';
 import AddRecordForm from '../components/AddRecordForm';
-import {TYPE_ICON_MAP, URI, URI_RECORD} from '../lib/consts';
+import {TYPE_ICON_MAP, URI} from '../lib/consts';
 import {useDispatch} from 'react-redux';
 import Validator from '../lib/Validator';
 import * as recordActions from '../store/record/record.actions';
@@ -22,7 +22,7 @@ function AddUrlRecordPage({navigation}) {
     {label: 'https://', value: 'https://'},
   ];
   const [option, setOption] = React.useState(options[0]);
-  const [showOptions, setShowOptions] = React.useState(false);
+  const [showOptions, setShowOptions] = React.useState(true);
   const formRules = {
     url: 'url',
   };
@@ -37,6 +37,12 @@ function AddUrlRecordPage({navigation}) {
       inputUrl.current && inputUrl.current.focus();
     });
   }, [option]);
+
+  React.useEffect(() => {
+    requestAnimationFrame(() => {
+      setShowOptions(false);
+    });
+  }, []);
 
   const onPressOption = option => () => {
     setOption(option);
@@ -70,6 +76,7 @@ function AddUrlRecordPage({navigation}) {
             <Pressable onPress={() => setShowOptions(!showOptions)}>
               <View
                 ref={reference}
+                collapsable={false}
                 style={[style, tw`mr-4 flex-row items-center`]}>
                 <Text>{option.value}</Text>
                 <Icon name="chevron-down" style={tw`text-xl ml-5`} />
@@ -78,16 +85,20 @@ function AddUrlRecordPage({navigation}) {
             {showOptions && (
               <View
                 ref={floating}
+                collapsable={false}
                 style={[
-                  tw`absolute bg-white rounded shadow-lg z-10`,
-                  {top: y ?? 0, left: x ?? 0},
+                  tw`absolute bg-white dark:bg-secondary rounded-md shadow-lg z-10 overflow-hidden`,
+                  {top: y || 0, left: x || 0},
                 ]}>
-                {options.map(({label, value}) => (
+                {options.map(({label, value}, index) => (
                   <Pressable
                     key={value}
                     onPress={onPressOption({label, value})}
-                    style={tw`p-2 px-4 border-b border-lighter`}>
-                    <Text>{label}</Text>
+                    style={[
+                      tw`p-2 px-4`,
+                      index > 0 && tw`border-t border-lighter dark:border-dark`,
+                    ]}>
+                    <Text style={tw`text-dark dark:text-lighter`}>{label}</Text>
                   </Pressable>
                 ))}
               </View>
