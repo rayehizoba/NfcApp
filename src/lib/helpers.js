@@ -3,14 +3,31 @@ import Text from '../assets/img/document-text.svg';
 import Link from '../assets/img/Link.svg';
 import {
   CONTACT_RECORD,
-  RTD_MAP, TEXT,
+  RTD_MAP,
+  TEXT,
   TEXT_RECORD,
-  TNF_MAP, URI,
-  URI_RECORD, VCARD,
+  TNF_MAP,
+  URI,
+  URI_RECORD,
+  VCARD,
 } from './consts';
 import {isEqual} from 'lodash';
 import {Alert, Linking} from 'react-native';
 import {Ndef} from 'react-native-nfc-manager';
+
+/**
+ *
+ * @param message
+ * @returns {*|{type: string}}
+ */
+export function normalizeNdefMessage(message) {
+  return Array.isArray(message.type)
+    ? {
+        ...message,
+        type: String.fromCharCode(...message.type),
+      }
+    : message;
+}
 
 /**
  *
@@ -167,58 +184,6 @@ export const getRecordHeading = ({data, record}) => {
   }
   return '';
 };
-
-// export const getNdefRecord
-
-// export function getNdefType({payload, id, type, tnf}) {
-//   // const payload = params.savedRecord?.payload;
-//   if (payload && payload.tech === NfcTech.Ndef) {
-//     if (payload.tnf === Ndef.TNF_WELL_KNOWN) {
-//       if (payload.rtd === Ndef.RTD_TEXT) {
-//         return 'TEXT';
-//       } else if (payload.rtd === Ndef.RTD_URI) {
-//         return 'URI';
-//       }
-//     } else if (payload.tnf === Ndef.TNF_MIME_MEDIA) {
-//       if (payload.mimeType === Ndef.MIME_WFA_WSC) {
-//         return 'WIFI_SIMPLE';
-//       } else if (payload.mimeType === 'text/vcard') {
-//         return 'VCARD';
-//       }
-//     }
-//   }
-//
-//   return params.ndefType;
-// }
-
-// function getRecordPayload() {
-//   if (handlerRef.current?.getValue) {
-//     const payload = {
-//       tech: NfcTech.Ndef,
-//       tnf: Ndef.TNF_WELL_KNOWN,
-//       value: handlerRef.current.getValue(),
-//     };
-//
-//     if (ndefType === 'TEXT') {
-//       payload.rtd = Ndef.RTD_TEXT;
-//     } else if (ndefType === 'URI') {
-//       payload.rtd = Ndef.RTD_URI;
-//     } else if (ndefType === 'WIFI_SIMPLE') {
-//       payload.tnf = Ndef.TNF_MIME_MEDIA;
-//       payload.mimeType = Ndef.MIME_WFA_WSC;
-//     } else if (ndefType === 'VCARD') {
-//       payload.tnf = Ndef.TNF_MIME_MEDIA;
-//       payload.mimeType = 'text/vcard';
-//     } else {
-//       throw new Error('NdefWriteScreen: cannot persist this payload');
-//     }
-//
-//     return payload;
-//   }
-//
-//   return null;
-// }
-//
 
 /**
  *

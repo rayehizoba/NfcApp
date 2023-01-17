@@ -25,6 +25,7 @@ import NfcManager from 'react-native-nfc-manager';
 import {useDispatch} from 'react-redux';
 import * as appActions from '../store/app/app.actions';
 import ProEditionUpgradeModal from '../modals/ProEditionUpgradeModal';
+import ErrorAlertModal from '../modals/ErrorAlertModal';
 
 const Stack = createStackNavigator();
 
@@ -100,6 +101,11 @@ function AuthNavigator() {
       />
 
       {/* Modals */}
+      <Stack.Screen
+        name="ErrorAlertModal"
+        component={ErrorAlertModal}
+        options={popUpModalScreenOptions}
+      />
       <Stack.Screen
         name="ProEditionUpgradeModal"
         component={ProEditionUpgradeModal}

@@ -1,4 +1,5 @@
 import {types as recordTypes} from '../record/record.reducer';
+import {normalizeNdefMessage} from '../../lib/helpers';
 
 export const types = {
   SET: 'RECORDS/SET',
@@ -23,14 +24,7 @@ export default function reducer(state = {...initialState}, action) {
         ...state,
         collection: [
           ...state.collection,
-          ...action.data.map(record => {
-            return Array.isArray(record.type)
-              ? {
-                  ...record,
-                  type: String.fromCharCode(...record.type),
-                }
-              : record;
-          }),
+          ...action.data.map(normalizeNdefMessage),
         ],
       };
 
